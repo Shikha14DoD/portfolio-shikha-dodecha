@@ -594,23 +594,40 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           </div>
         </article>
 
-        <article class="pcard" id="p-shop" data-uses="python fastapi react typescript nextjs postgres llm agents mcp testing">
+        <article class="pcard" id="p-shop" data-uses="python fastapi react typescript nextjs postgres llm agents mcp testing cicd evals">
           <div class="ptop"><h3>AI Shopping Assistant</h3><span class="year">2026 · live</span></div>
+          <p class="q">A chat-based styling agent that searches 44,417 real garments and never saves anything without asking you first.</p>
           <div class="why">
             <p class="why-k">The vision</p>
             <p>Shopping for an occasion means scrolling through thousands of options. I want an agent that understands the event and puts together the whole look, including the outfit, jewelry and accessories, from real online stores. What's live today is an early, small-scale first version that I plan to grow much larger.</p>
           </div>
-          <p>Ask for "an outdoor wedding outfit under $200" and a LangGraph agent turns it into tool calls over a 44,417-item catalog served by my own MCP server. Write actions need an API key, a human confirmation and pass a rate limit, and every attempt is logged.</p>
+          <p>Describe what you want, like "black t-shirts under $30" or "save that one in medium", and a LangGraph agent decides which tools to call on my own MCP server. The interesting part is what happens around the AI: the agent can only use the tools it's given, always knows which user it's acting for, pauses for your yes or no before any write, and logs every attempt, including failed and crashed ones.</p>
           <ol class="flow" aria-label="Request flow">
-            <li><span>Next.js chat</span></li><li><span>LangGraph agent</span></li><li><span>MCP tools</span></li><li><span>Postgres catalog</span></li><li><span>confirm before write</span></li><li><span>audit log</span></li>
+            <li><span>Next.js chat</span></li><li><span>FastAPI</span></li><li><span>LangGraph: agent → confirm → tools</span></li><li><span>MCP tool server</span></li><li><span>Neon Postgres</span></li>
           </ol>
-          <div class="metrics"><span>44,417 products</span><span>18-test ground-truth harness</span><span>caught 1-of-4-tools bug</span></div>
-          <div class="stack"><span>FastAPI</span><span>React</span><span>TypeScript</span><span>Next.js</span><span>Neon Postgres</span><span>LangGraph</span><span>MCP</span><span>Render</span></div>
+          <div class="metrics"><span>44,417 garments</span><span>4 MCP tools</span><span>20 ground-truth tests</span><span>2 LLM providers</span><span>$0 hosting</span></div>
+          <details class="more">
+            <summary>Under the hood, and what broke</summary>
+            <div class="more-body">
+              <p><b>Tools:</b> search the catalog, check stock by size, get care instructions, and save to a wishlist.</p>
+              <p><b>Safe writes:</b> saving needs API-key auth, passes a rate limit of 5 per minute, and is audit-logged on every attempt, guaranteed by a <code class="mono">finally</code> block.</p>
+              <p><b>Two providers:</b> Groq is primary and Gemini is the automatic fallback, so one provider going down doesn't break the app.</p>
+              <p><b>Restart-safe:</b> conversation state lives in Postgres through LangGraph checkpoints, so a server restart doesn't lose your chat, even one waiting on a "confirm?".</p>
+              <p><b>Tests that check the truth:</b> each of the 20 ground-truth tests checks the agent's answer against values pulled from the database. Replying isn't enough; the reply has to be true. 6 deterministic tests (no LLM) run on every pull request and cover auth rejection, audit-on-crash, rate limiting and a pending confirmation surviving a restart. Main is protected, Render deploys only after CI is green, and the full LLM eval runs nightly against the live deploy so Groq's free-tier limit doesn't make every PR flaky.</p>
+              <p class="more-k">What broke and what I learned</p>
+              <ul>
+                <li>A startup ordering bug meant the agent silently loaded 1 tool instead of 4. The test harness caught it.</li>
+                <li>The MCP subprocess didn't inherit <code class="mono">DATABASE_URL</code>, so every catalog query failed in production even though it worked locally.</li>
+                <li>Gemini could stall without erroring, which defeated the fallback until I added a timeout.</li>
+              </ul>
+            </div>
+          </details>
+          <div class="stack"><span>Python</span><span>FastAPI</span><span>React</span><span>TypeScript</span><span>Next.js</span><span>Neon Postgres</span><span>LangGraph</span><span>MCP</span><span>Groq / Gemini</span><span>GitHub Actions</span><span>Render</span></div>
           <div class="links">
             <a href="https://fashion-mcp-frontend.onrender.com/" target="_blank" rel="noopener">live demo ↗</a>
             <a href="https://github.com/Shikha14DoD/fashion-mcp" target="_blank" rel="noopener">code ↗</a>
           </div>
-          <p class="note">Hosted on a free tier, so the first load can take about 30 seconds while it wakes up.</p>
+          <p class="note">Hosted on a free tier, so the first load after a quiet spell can take 20–30 seconds to wake up.</p>
         </article>
 
         <article class="pcard" id="p-ppp" data-uses="react mongodb stripe apis leadership supabase postman">
@@ -931,15 +948,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       lines: [
         '[mcp]   connecting to fashion-mcp ... ok',
         '[mcp]   server advertises 4 tools',
-        '[mcp]   search_products, get_product, add_to_cart, create_order',
+        '[mcp]   search_garments, check_availability, get_care_instructions, save_to_wishlist',
         '[agent] binding tools ...',
-        '[agent] bound: search_products',
+        '[agent] bound: search_garments',
         '[agent] graph compiled  ✓',
         '[agent] ready on :8000',
       ],
       answer: 4,
       title: 'The agent bound only 1 of the 4 tools.',
-      body: 'It could still search, so normal chats looked fine. It just could never add to cart or place an order. My 18-test ground-truth harness for the AI Shopping Assistant caught it, because one test asserts exactly which tools the agent can call.',
+      body: 'It could still search, so normal chats looked fine. It just could never check stock, look up care instructions or save to a wishlist. A startup ordering bug caused it, and the ground-truth test harness for my AI Shopping Assistant caught it.',
     },
     {
       kicker: 'Rails · username search',
