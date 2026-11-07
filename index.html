@@ -172,7 +172,7 @@ section { padding-block: var(--s-8) 0; scroll-margin-top: 4rem; }
 .about-grid { display: grid; gap: var(--s-6); grid-template-columns: 1fr; }
 @media (min-width: 900px) { .about-grid { grid-template-columns: 1.3fr 1fr; gap: var(--s-7); } }
 .about-grid > * { min-width: 0; }
-.about-text { display: grid; gap: var(--s-4); max-width: 62ch; font-size: 1.08rem; }
+.about-text { display: grid; gap: var(--s-4); align-content: start; max-width: 62ch; font-size: 1.08rem; }
 .about-text p:first-child::first-letter { font: 800 3.1em/0.8 var(--f-display); float: left; margin: .08em .1em 0 0; color: var(--accent); }
 .about-side { display: grid; gap: var(--s-5); align-content: start; }
 .route { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; position: relative; }
@@ -346,6 +346,86 @@ body.filtering [data-uses].lit { border-color: var(--accent); }
 .social { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-3); }
 footer { border-top: 1px solid var(--line); padding-block: var(--s-5); font: 400 .8rem var(--f-mono); color: var(--muted); }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-3); }
+
+/* ---------- revamp: logos, impact, motion ---------- */
+.nav { position: sticky; }
+.progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+.nav li a[aria-current="true"] { color: var(--ink); background: var(--surface); box-shadow: inset 0 -2px 0 var(--accent); }
+
+.stack { align-items: center; gap: .4rem; }
+.stack .tag { font: 400 .74rem var(--f-mono); padding: .3rem .5rem; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); }
+.stack .tech {
+  position: relative; display: inline-grid; place-items: center; width: 2.1rem; height: 2.1rem; padding: 0;
+  border-radius: 8px; background: var(--plate); border: 1px solid var(--line); transition: transform .15s, box-shadow .15s;
+}
+.stack .tech img { width: 1.25rem; height: 1.25rem; object-fit: contain; }
+.stack .tech:hover { transform: translateY(-2px); box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--ink) 50%, transparent); }
+.stack .tech::after {
+  content: attr(data-name); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translate(-50%, 4px);
+  background: var(--ink); color: var(--paper); font: 500 .7rem var(--f-mono); padding: .2rem .45rem; border-radius: 4px;
+  white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; z-index: 5;
+}
+.stack .tech:hover::after { opacity: 1; transform: translate(-50%, 0); }
+
+.marquee {
+  margin-top: var(--s-7); overflow: hidden; border-block: 1px solid var(--line); padding-block: .9rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track { display: flex; gap: var(--s-6); width: max-content; animation: marquee 55s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.mq { display: inline-flex; align-items: center; gap: .5rem; font: 500 .9rem var(--f-body); color: var(--muted); white-space: nowrap; }
+.mq img { width: 1.4rem; height: 1.4rem; object-fit: contain; background: var(--plate); border-radius: 6px; padding: .15rem; box-sizing: content-box; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+.impact { display: grid; gap: var(--s-4); grid-template-columns: 1fr; margin-bottom: var(--s-5); }
+@media (min-width: 760px) { .impact { grid-template-columns: repeat(3, 1fr); } }
+.imp { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--s-5); display: grid; gap: var(--s-2); align-content: start; min-width: 0; }
+.imp b { font: 800 clamp(2.4rem, 5vw, 3.4rem)/1 var(--f-display); letter-spacing: -.03em; color: var(--accent); font-variant-numeric: tabular-nums; }
+.imp.hot b { color: var(--bug); }
+.imp span { color: var(--muted); font-size: .95rem; }
+
+.rlist { display: grid; gap: var(--s-3); }
+.rrow {
+  display: grid; gap: var(--s-3) var(--s-5); grid-template-columns: 1fr; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: var(--s-4) var(--s-5);
+  transition: opacity .25s, border-color .25s;
+}
+@media (min-width: 860px) { .rrow { grid-template-columns: 1fr auto; } }
+.rrow > * { min-width: 0; }
+.rrow h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: .2rem; }
+.rrow p { color: var(--muted); font-size: .95rem; }
+.rrow-side { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4); }
+.go { font: 500 .85rem var(--f-mono); color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+.tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.6rem, 1fr)); gap: .5rem; }
+.tools.small { grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); }
+.tool {
+  display: grid; justify-items: center; gap: .4rem; padding: .7rem .4rem .55rem; border-radius: 10px; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); color: var(--ink); font: 500 .78rem var(--f-body); text-align: center;
+  transition: transform .15s, border-color .15s, background .15s;
+}
+.tool img { width: 1.9rem; height: 1.9rem; object-fit: contain; background: var(--plate); border-radius: 8px; padding: .25rem; box-sizing: content-box; }
+.tool .glyph { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 8px; background: var(--accent-soft); font: 600 .72rem var(--f-mono); font-style: normal; color: var(--ink); }
+.tool:hover { transform: translateY(-3px); border-color: var(--accent); }
+.tool[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+.tool.plain { cursor: default; }
+.tool.plain:hover { transform: none; border-color: var(--line); }
+.tools.small .tool img { width: 1.4rem; height: 1.4rem; }
+.sg-wide { grid-column: 1 / -1; }
+#skills .skill-groups { grid-template-columns: 1fr; gap: var(--s-5); }
+.tools { grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr)); }
+
+.pcard, .mr, .imp, .rrow {
+  --mx: 50%; --my: -200px;
+  background-image: radial-gradient(420px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 10%, transparent), transparent 45%);
+}
+.pcard:hover, .imp:hover, .rrow:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+  .tool, .stack .tech { transition: none; }
+}
 </style>
 </head>
 <body>
@@ -362,6 +442,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <li><a href="#bughunt">Bug hunt</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <span class="progress" id="progress" aria-hidden="true"></span>
     <button class="theme-btn" id="theme-btn" type="button" aria-label="Switch color theme">◐ theme</button>
   </div>
 </nav>
@@ -383,10 +464,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <a class="btn" href="#contact">Get in touch</a>
         </div>
         <div class="facts">
-          <div><b>36M+</b><span>records through one ETL pipeline</span></div>
-          <div><b>15</b><span>countries of speeches ingested</span></div>
-          <div><b>~10M</b><span>records migrated, MySQL → MongoDB</span></div>
-          <div><b>95+</b><span>Lighthouse, up from 35–45</span></div>
+          <div><b data-count="36" data-suffix="M+">36M+</b><span>records through one ETL pipeline</span></div>
+          <div><b data-count="15">15</b><span>countries of speeches ingested</span></div>
+          <div><b data-count="10" data-prefix="~" data-suffix="M">~10M</b><span>records migrated, MySQL → MongoDB</span></div>
+          <div><b data-count="95" data-suffix="+">95+</b><span>Lighthouse, up from 35–45</span></div>
         </div>
       </div>
 
@@ -401,6 +482,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         </div>
       </div>
     </div>
+    <div class="wrap"><div class="marquee" aria-label="Tools I build with"><div class="marquee-track" id="marquee"><span class="mq"><img src="icons/python.svg" alt="" width="22" height="22">Python</span><span class="mq"><img src="icons/typescript.svg" alt="" width="22" height="22">TypeScript</span><span class="mq"><img src="icons/react.svg" alt="" width="22" height="22">React</span><span class="mq"><img src="icons/nextjs.svg" alt="" width="22" height="22">Next.js</span><span class="mq"><img src="icons/fastapi.svg" alt="" width="22" height="22">FastAPI</span><span class="mq"><img src="icons/nodejs.svg" alt="" width="22" height="22">Node.js</span><span class="mq"><img src="icons/postgresql.svg" alt="" width="22" height="22">PostgreSQL</span><span class="mq"><img src="icons/mongodb.svg" alt="" width="22" height="22">MongoDB</span><span class="mq"><img src="icons/mysql.svg" alt="" width="22" height="22">MySQL</span><span class="mq"><img src="icons/aws.svg" alt="" width="22" height="22">AWS</span><span class="mq"><img src="icons/lambda.svg" alt="" width="22" height="22">AWS Lambda</span><span class="mq"><img src="icons/dynamodb.svg" alt="" width="22" height="22">DynamoDB</span><span class="mq"><img src="icons/docker.svg" alt="" width="22" height="22">Docker</span><span class="mq"><img src="icons/githubactions.svg" alt="" width="22" height="22">GitHub Actions</span><span class="mq"><img src="icons/gitlab.svg" alt="" width="22" height="22">GitLab</span><span class="mq"><img src="icons/pytorch.svg" alt="" width="22" height="22">PyTorch</span><span class="mq"><img src="icons/huggingface.svg" alt="" width="22" height="22">Hugging Face</span><span class="mq"><img src="icons/gemini.svg" alt="" width="22" height="22">Gemini</span><span class="mq"><img src="icons/claude.svg" alt="" width="22" height="22">Claude</span><span class="mq"><img src="icons/rails.svg" alt="" width="22" height="22">Rails</span><span class="mq"><img src="icons/laravel.svg" alt="" width="22" height="22">Laravel</span><span class="mq"><img src="icons/php.svg" alt="" width="22" height="22">PHP</span><span class="mq"><img src="icons/java.svg" alt="" width="22" height="22">Java</span><span class="mq"><img src="icons/redis.svg" alt="" width="22" height="22">Redis</span><span class="mq"><img src="icons/git.svg" alt="" width="22" height="22">Git</span></div></div></div>
   </header>
 
   <!-- ABOUT -->
@@ -411,7 +493,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <div class="about-grid">
         <div class="about-text">
           <p>I grew up in Damoh, a small city in Madhya Pradesh, and studied Information Technology in Indore. My first real taste of data was an internship building disaster-loss tools from rainfall records. After that I spent two years as an engineer at Simplilearn, then came to the US for my master's at NJIT.</p>
-          <p>What I like most is taking something messy, like an undocumented API, a decade of scanned speeches or a slow page, and making it fast, correct and checkable. I don't trust a result until I've tested it against ground truth.</p>
+          <p>What I like most is taking something messy, like an undocumented API, a pile of scanned speech PDFs or a slow page, and making it fast, correct and checkable. I don't trust a result until I've tested it against ground truth.</p>
           <p>Away from the keyboard I cook. It's the other place where I follow a process, taste as I go and fix things before they reach the table.</p>
         </div>
         <div class="about-side">
@@ -444,37 +526,22 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <div class="org-row"><img class="logo wide" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA4NjMuNyA1NjcuNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgODYzLjcgNTY3LjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMyMzFGMjA7fQ0KPC9zdHlsZT4NCjxyZWN0IHg9IjM1LjUiIHk9IjQ4Mi4zIiBjbGFzcz0ic3QwIiB3aWR0aD0iODI4LjEiIGhlaWdodD0iMjguNiIvPg0KPHJlY3QgeD0iMzUuNSIgeT0iNTM5IiBjbGFzcz0ic3QwIiB3aWR0aD0iODI4LjEiIGhlaWdodD0iMjguNiIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSI3MywyOS4yIDczLDEyOS45IDQwLjYsMTI5LjkgNDAuNiwyOS4yIDAsMjkuMiAwLDAgMTEzLjYsMCAxMTMuNiwyOS4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyNDAuOSw4MC40IDE1NS43LDgwLjQgMTU1LjcsMTI5LjkgMTIzLjIsMTI5LjkgMTIzLjIsMCAxNTUuNywwIDE1NS43LDQ5LjUgMjQwLjksNDkuNSAyNDAuOSwwIA0KCTI3My40LDAgMjczLjQsMTI5LjkgMjQwLjksMTI5LjkgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI4OC4zLDEyOS45IDI4OC4zLDAgMzgwLjcsMCAzODAuNywyOS4yIDMyMC44LDI5LjIgMzIwLjgsNTEuMSAzNjkuMyw1MS4xIDM2OS4zLDc4LjcgMzIwLjgsNzguNyANCgkzMjAuOCwxMDAuNiAzODAuNywxMDAuNiAzODAuNywxMjkuOSAiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iNzIuOSwyMDkuMSA2OCwyMDkuMSA2OCwyOTIuMiAzNS41LDI5Mi4yIDM1LjUsMTYyLjMgNzMuNSwxNjIuMyAxNDkuMiwyNDMuNSAxNTQsMjQzLjUgMTU0LDE2Mi4zIA0KCTE4Ni41LDE2Mi4zIDE4Ni41LDI5Mi4yIDE0OS44LDI5Mi4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyMDEuNSwyOTIuMiAyMDEuNSwxNjIuMyAyOTMuOCwxNjIuMyAyOTMuOCwxOTEuNiAyMzMuOSwxOTEuNiAyMzMuOSwyMTMuNSAyODIuNSwyMTMuNSAyODIuNSwyNDEuMSANCgkyMzMuOSwyNDEuMSAyMzMuOSwyNjMgMjkzLjgsMjYzIDI5My44LDI5Mi4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyOTYuOCwxNjIuMyAzMzIuOSwxNjIuMyAzNjEsMjY1LjcgMzY4LjcsMjY1LjcgMzk0LjMsMTYyLjMgNDU1LjMsMTYyLjMgNDg0LjcsMjY1LjcgNDkyLjQsMjY1LjcgDQoJNTE2LjcsMTYyLjMgNTUzLjYsMTYyLjMgNTE3LjcsMjkyLjIgNDU5LjksMjkyLjIgNDMwLDE4OC44IDQyMC45LDE4OC44IDM5My43LDI5Mi4yIDMzNS45LDI5Mi4yICIvPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTI4LjIsMzY0LjNjMC0yNy40LDIxLjktNDIuMiw1MC4yLTQyLjJjMTYuNCwwLDM0LjQsNC4yLDQ0LjYsMTAuMWwtNi4yLDI3LjZjLTEwLjktNi41LTI3LjEtOS45LTM5LjYtOS45DQoJYy0xMC4xLDAtMTYuOSwzLjktMTYuOSwxMC43YzAsMjEuMSw2Ni42LDkuMyw2Ni42LDUyLjljMCwyMy4yLTE2LjYsNDMuNy01MS4xLDQzLjdjLTE0LjgsMC0zMS41LTEuOS00NS04LjNsMS4zLTI5LjcNCgljMTMuNSw2LjUsMjguMiwxMC4yLDQ0LjYsMTAuMmMxNC4zLDAsMTcuOS01LDE3LjktMTFDOTQuNiwzOTguOSwyOC4yLDQxMC4yLDI4LjIsMzY0LjMiLz4NCjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMzQuNiw0NTIuOGMtMTAuNCwzLjktMTkuMiw0LjQtMzMuOCw0LjRjLTQwLjMsMC02Ny43LTMxLjctNjcuNy02Ny43YzAtMzYuOCwyOC40LTY3LjIsNzAuNi02Ny4yDQoJYzEwLjksMCwyMi45LDAuMywzMywzLjdsLTMuMSwyOS41Yy0xMS40LTMuNy0xOS41LTQuMi0yOC45LTQuMmMtMjQsMC0zOC4xLDE0LjEtMzguMSwzOC4xYzAsMjQuMiwxNi4xLDM4LDM5LDM4DQoJYzE0LjYsMCwxOS4yLTEuNSwyOS4xLTQuN1Y0NTIuOHoiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMzY3LjIsNDA1IDI4Miw0MDUgMjgyLDQ1NC42IDI0OS41LDQ1NC42IDI0OS41LDMyNC43IDI4MiwzMjQuNyAyODIsMzc0LjIgMzY3LjIsMzc0LjIgMzY3LjIsMzI0LjcgDQoJMzk5LjYsMzI0LjcgMzk5LjYsNDU0LjYgMzY3LjIsNDU0LjYgIi8+DQo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDg0LjYsNDI5LjljMjUuNSwwLDQzLjgtMTMsNDMuOC00MS42YzAtMjYtMTguMy0zOS00My43LTM5Yy0yNS4zLDAtNDMuNywxMi43LTQzLjcsMzkuOQ0KCUM0NDEuMSw0MTYuNyw0NTkuNCw0MjkuOSw0ODQuNiw0MjkuOSBNNDg1LDMyMi4xYzQ0LjYsMCw3Ni44LDIzLDc2LjgsNjYuOWMwLDQ1LjYtMzQuNyw2OC4yLTc2LjksNjguMmMtNDIuNSwwLTc3LjMtMjIuOS03Ny4zLTY4DQoJQzQwNy42LDM0Ni42LDQzOS4zLDMyMi4xLDQ4NSwzMjIuMSIvPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTY0NC41LDQyOS45YzI1LjUsMCw0My44LTEzLDQzLjgtNDEuNmMwLTI2LTE4LjMtMzktNDMuNy0zOWMtMjUuMywwLTQzLjcsMTIuNy00My43LDM5LjkNCglDNjAxLDQxNi43LDYxOS4zLDQyOS45LDY0NC41LDQyOS45IE02NDUsMzIyLjFjNDQuNiwwLDc2LjgsMjMsNzYuOCw2Ni45YzAsNDUuNi0zNC43LDY4LjItNzYuOSw2OC4yYy00Mi41LDAtNzcuMy0yMi45LTc3LjMtNjgNCglDNTY3LjUsMzQ2LjYsNTk5LjIsMzIyLjEsNjQ1LDMyMi4xIi8+DQo8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjczMC43LDMyNC43IDc2My4xLDMyNC43IDc2My4xLDQyMy43IDg2My42LDQyMy43IDg2My42LDQ1NC41IDczMC43LDQ1NC41ICIvPg0KPC9zdmc+DQo=" alt="The New School logo"><p class="org">Software Developer · People's AI &amp; Data Lab · Remote, USA</p></div>
         </div>
       </div>
-      <p class="sec-lede">I build the data side of two social-science research projects: ingestion, cleaning, quality checks and the embedding and topic-model pipelines that sit on top.</p>
+      <p class="sec-lede">I build the data pipelines behind two gender-research projects. Three numbers sum it up.</p>
 
-      <div class="research">
-        <article class="rcard" id="r-speech" data-uses="python scraping etl apis pandas nlp topic dataquality translation">
-          <div class="ptop"><h3>Speech Gender Gap</h3><span class="year">2023–2026 speeches</span></div>
-          <p class="q">Across countries, do female and male leaders prioritize different issues when they speak in public?</p>
-          <p>Speeches by heads of state and government from 2023 to 2026, machine-translated where needed, with NMF topic models fit per leader and compared by sex and by domestic vs. international audience. The master dataset feeds four tracks: UN General Assembly speeches, the 2026 UN Secretary-General candidates, about 10 paired case studies (a female leader and a male comparator), and a pooled corpus of 20+ leaders.</p>
-          <p><span class="flag">early signals</span> Most leaders say different things at home than abroad, not just the same themes reworded. Mexico's Sheinbaum is a notable exception: she keeps leading with domestic achievements on the world stage.</p>
-          <ul class="wins">
-            <li><b>~7,800</b><span>documents from 20+ sources in 15 countries</span></li>
-            <li><b>5%</b><span>of the data was all one API returned. I found it, fixed it, and checked the fix against ground truth. The bug had reversed a key finding.</span></li>
-            <li><b>0</b><span>silent duplicates allowed through: Jaccard-similarity dedup and term-anchor tests run before anything reaches the models</span></li>
-          </ul>
-          <ol class="flow" aria-label="Pipeline steps">
-            <li><span>undocumented JSON APIs</span></li><li><span>Wayback + PDF recovery</span></li><li><span>video ASR</span></li><li><span>translate</span></li><li><span>dedup + audit</span></li><li><span>NMF topics</span></li>
-          </ol>
-          <div class="links"><a href="https://github.com/Shikha14DoD/speech-gender-gap" target="_blank" rel="noopener">code ↗</a></div>
+      <div class="impact">
+        <div class="imp"><b data-count="36" data-suffix="M+">36M+</b><span>records through a checkpointed, fault-tolerant ETL pipeline and 4 embedding models</span></div>
+        <div class="imp"><b data-count="7800" data-prefix="~">~7,800</b><span>speeches from 20+ sources in 15 countries, many from undocumented APIs I reverse-engineered</span></div>
+        <div class="imp hot"><b data-count="5" data-suffix="%">5%</b><span>of the data was all one API returned. I caught it and fixed it; the gap had reversed a key finding.</span></div>
+      </div>
+
+      <div class="rlist">
+        <article class="rrow" id="r-speech" data-uses="python scraping etl apis pandas nlp topic dataquality">
+          <div class="rrow-main"><h3>Speech Gender Gap</h3><p>Across countries, do female and male leaders prioritize different issues when they speak in public?</p></div>
+          <div class="rrow-side"><div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="pandas"><img src="icons/pandas.svg" alt="pandas" width="20" height="20" loading="lazy"></span><span class="tag">BeautifulSoup</span><span class="tag">NMF</span></div><a class="go" href="https://github.com/Shikha14DoD/speech-gender-gap" target="_blank" rel="noopener">code ↗</a></div>
         </article>
-
-        <article class="rcard" id="r-bias" data-uses="python etl pytorch huggingface embeddings bigquery pandas nlp dataquality">
-          <div class="ptop"><h3>Gender Bias in American Language</h3><span class="year">A century of US public text</span></div>
-          <p class="q">Has gender bias in US public language changed over a century, and does it track real inequality?</p>
-          <p>Extends Garg et al. (2018) from national-by-decade down to state-by-year, scoring bias with WEAT (Caliskan et al., 2017) on career vs. family, competence vs. warmth, leadership vs. subordination, and occupations. The panel will feed a model of women's labor-force participation.</p>
-          <dl class="kv">
-            <dt>Text</dt><dd>Chronicling America newspapers, GDELT, Reddit, Congressional Record</dd>
-            <dt>Models</dt><dd>Word2Vec, GloVe, BERT, RoBERTa</dd>
-            <dt>Checks</dt><dd>Census occupation data, General Social Survey</dd>
-            <dt>Scale</dt><dd>36M+ records, 5 sources, 9 demo states; checkpointed and fault-tolerant</dd>
-          </dl>
-          <p><span class="flag">preliminary</span> The demo pipeline runs end to end and reproduces the known century-long drop in occupational segregation. Firm results wait on full-scale data.</p>
-          <div class="links"><a href="https://github.com/Shikha14DoD/bias_project" target="_blank" rel="noopener">code ↗</a></div>
+        <article class="rrow" id="r-bias" data-uses="python etl pytorch huggingface embeddings bigquery pandas nlp dataquality">
+          <div class="rrow-main"><h3>Gender Bias in American Language</h3><p>A century of US public text: has gender bias in language changed, and does it track real inequality?</p></div>
+          <div class="rrow-side"><div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="PyTorch"><img src="icons/pytorch.svg" alt="PyTorch" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Hugging Face"><img src="icons/huggingface.svg" alt="Hugging Face" width="20" height="20" loading="lazy"></span><span class="tech" data-name="BigQuery"><img src="icons/bigquery.svg" alt="BigQuery" width="20" height="20" loading="lazy"></span></div><a class="go" href="https://github.com/Shikha14DoD/bias_project" target="_blank" rel="noopener">code ↗</a></div>
         </article>
       </div>
     </div>
@@ -493,12 +560,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <div class="org-row"><img class="logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAyNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCA4NjMuNyA1NjcuNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgODYzLjcgNTY3LjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiMyMzFGMjA7fQ0KPC9zdHlsZT4NCjxyZWN0IHg9IjM1LjUiIHk9IjQ4Mi4zIiBjbGFzcz0ic3QwIiB3aWR0aD0iODI4LjEiIGhlaWdodD0iMjguNiIvPg0KPHJlY3QgeD0iMzUuNSIgeT0iNTM5IiBjbGFzcz0ic3QwIiB3aWR0aD0iODI4LjEiIGhlaWdodD0iMjguNiIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSI3MywyOS4yIDczLDEyOS45IDQwLjYsMTI5LjkgNDAuNiwyOS4yIDAsMjkuMiAwLDAgMTEzLjYsMCAxMTMuNiwyOS4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyNDAuOSw4MC40IDE1NS43LDgwLjQgMTU1LjcsMTI5LjkgMTIzLjIsMTI5LjkgMTIzLjIsMCAxNTUuNywwIDE1NS43LDQ5LjUgMjQwLjksNDkuNSAyNDAuOSwwIA0KCTI3My40LDAgMjczLjQsMTI5LjkgMjQwLjksMTI5LjkgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjI4OC4zLDEyOS45IDI4OC4zLDAgMzgwLjcsMCAzODAuNywyOS4yIDMyMC44LDI5LjIgMzIwLjgsNTEuMSAzNjkuMyw1MS4xIDM2OS4zLDc4LjcgMzIwLjgsNzguNyANCgkzMjAuOCwxMDAuNiAzODAuNywxMDAuNiAzODAuNywxMjkuOSAiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iNzIuOSwyMDkuMSA2OCwyMDkuMSA2OCwyOTIuMiAzNS41LDI5Mi4yIDM1LjUsMTYyLjMgNzMuNSwxNjIuMyAxNDkuMiwyNDMuNSAxNTQsMjQzLjUgMTU0LDE2Mi4zIA0KCTE4Ni41LDE2Mi4zIDE4Ni41LDI5Mi4yIDE0OS44LDI5Mi4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyMDEuNSwyOTIuMiAyMDEuNSwxNjIuMyAyOTMuOCwxNjIuMyAyOTMuOCwxOTEuNiAyMzMuOSwxOTEuNiAyMzMuOSwyMTMuNSAyODIuNSwyMTMuNSAyODIuNSwyNDEuMSANCgkyMzMuOSwyNDEuMSAyMzMuOSwyNjMgMjkzLjgsMjYzIDI5My44LDI5Mi4yICIvPg0KPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIyOTYuOCwxNjIuMyAzMzIuOSwxNjIuMyAzNjEsMjY1LjcgMzY4LjcsMjY1LjcgMzk0LjMsMTYyLjMgNDU1LjMsMTYyLjMgNDg0LjcsMjY1LjcgNDkyLjQsMjY1LjcgDQoJNTE2LjcsMTYyLjMgNTUzLjYsMTYyLjMgNTE3LjcsMjkyLjIgNDU5LjksMjkyLjIgNDMwLDE4OC44IDQyMC45LDE4OC44IDM5My43LDI5Mi4yIDMzNS45LDI5Mi4yICIvPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTI4LjIsMzY0LjNjMC0yNy40LDIxLjktNDIuMiw1MC4yLTQyLjJjMTYuNCwwLDM0LjQsNC4yLDQ0LjYsMTAuMWwtNi4yLDI3LjZjLTEwLjktNi41LTI3LjEtOS45LTM5LjYtOS45DQoJYy0xMC4xLDAtMTYuOSwzLjktMTYuOSwxMC43YzAsMjEuMSw2Ni42LDkuMyw2Ni42LDUyLjljMCwyMy4yLTE2LjYsNDMuNy01MS4xLDQzLjdjLTE0LjgsMC0zMS41LTEuOS00NS04LjNsMS4zLTI5LjcNCgljMTMuNSw2LjUsMjguMiwxMC4yLDQ0LjYsMTAuMmMxNC4zLDAsMTcuOS01LDE3LjktMTFDOTQuNiwzOTguOSwyOC4yLDQxMC4yLDI4LjIsMzY0LjMiLz4NCjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMzQuNiw0NTIuOGMtMTAuNCwzLjktMTkuMiw0LjQtMzMuOCw0LjRjLTQwLjMsMC02Ny43LTMxLjctNjcuNy02Ny43YzAtMzYuOCwyOC40LTY3LjIsNzAuNi02Ny4yDQoJYzEwLjksMCwyMi45LDAuMywzMywzLjdsLTMuMSwyOS41Yy0xMS40LTMuNy0xOS41LTQuMi0yOC45LTQuMmMtMjQsMC0zOC4xLDE0LjEtMzguMSwzOC4xYzAsMjQuMiwxNi4xLDM4LDM5LDM4DQoJYzE0LjYsMCwxOS4yLTEuNSwyOS4xLTQuN1Y0NTIuOHoiLz4NCjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMzY3LjIsNDA1IDI4Miw0MDUgMjgyLDQ1NC42IDI0OS41LDQ1NC42IDI0OS41LDMyNC43IDI4MiwzMjQuNyAyODIsMzc0LjIgMzY3LjIsMzc0LjIgMzY3LjIsMzI0LjcgDQoJMzk5LjYsMzI0LjcgMzk5LjYsNDU0LjYgMzY3LjIsNDU0LjYgIi8+DQo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDg0LjYsNDI5LjljMjUuNSwwLDQzLjgtMTMsNDMuOC00MS42YzAtMjYtMTguMy0zOS00My43LTM5Yy0yNS4zLDAtNDMuNywxMi43LTQzLjcsMzkuOQ0KCUM0NDEuMSw0MTYuNyw0NTkuNCw0MjkuOSw0ODQuNiw0MjkuOSBNNDg1LDMyMi4xYzQ0LjYsMCw3Ni44LDIzLDc2LjgsNjYuOWMwLDQ1LjYtMzQuNyw2OC4yLTc2LjksNjguMmMtNDIuNSwwLTc3LjMtMjIuOS03Ny4zLTY4DQoJQzQwNy42LDM0Ni42LDQzOS4zLDMyMi4xLDQ4NSwzMjIuMSIvPg0KPHBhdGggY2xhc3M9InN0MCIgZD0iTTY0NC41LDQyOS45YzI1LjUsMCw0My44LTEzLDQzLjgtNDEuNmMwLTI2LTE4LjMtMzktNDMuNy0zOWMtMjUuMywwLTQzLjcsMTIuNy00My43LDM5LjkNCglDNjAxLDQxNi43LDYxOS4zLDQyOS45LDY0NC41LDQyOS45IE02NDUsMzIyLjFjNDQuNiwwLDc2LjgsMjMsNzYuOCw2Ni45YzAsNDUuNi0zNC43LDY4LjItNzYuOSw2OC4yYy00Mi41LDAtNzcuMy0yMi45LTc3LjMtNjgNCglDNTY3LjUsMzQ2LjYsNTk5LjIsMzIyLjEsNjQ1LDMyMi4xIi8+DQo8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjczMC43LDMyNC43IDc2My4xLDMyNC43IDc2My4xLDQyMy43IDg2My42LDQyMy43IDg2My42LDQ1NC41IDczMC43LDQ1NC41ICIvPg0KPC9zdmc+DQo=" alt="The New School logo"><div><h3>Software Developer</h3>
           <p class="where">The New School · People's AI &amp; Data Lab</p></div></div>
           <ul>
-            <li>Engineered a checkpointed, fault-tolerant Python ETL pipeline processing 36M+ records from 5 sources through 4 embedding models.</li>
-            <li>Ingested ~7,800 documents from 20+ sources in 15 countries by reverse-engineering undocumented JSON APIs.</li>
-            <li>Fixed a silent API bug that returned only 5% of the data and had reversed a key finding.</li>
-            <li>Automated data-quality checks (Jaccard dedup, term-anchor tests) so bad data stops before the ML pipeline.</li>
+            <li>Build the data pipelines behind two gender-research projects: 36M+ records and ~7,800 speeches from 15 countries.</li>
+            <li>Caught a silent API bug that returned only 5% of the data and had reversed a key finding.</li>
           </ul>
-          <div class="stack"><span>Python</span><span>BigQuery</span><span>PyTorch</span><span>HuggingFace</span><span>pandas</span><span>BeautifulSoup</span></div>
+          <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="BigQuery"><img src="icons/bigquery.svg" alt="BigQuery" width="20" height="20" loading="lazy"></span><span class="tech" data-name="PyTorch"><img src="icons/pytorch.svg" alt="PyTorch" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Hugging Face"><img src="icons/huggingface.svg" alt="Hugging Face" width="20" height="20" loading="lazy"></span><span class="tech" data-name="pandas"><img src="icons/pandas.svg" alt="pandas" width="20" height="20" loading="lazy"></span><span class="tag">BeautifulSoup</span></div>
         </li>
 
         <li class="tl" data-uses="react mongodb stripe apis leadership supabase postman">
@@ -509,7 +574,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <li>Shipped a custom-merchandise platform in 4 sprints: AI-guided design flow, vendor-API catalog, Stripe checkout and a dashboard.</li>
             <li>Led a 5-person team through sprints and design reviews; integrated the sponsor's Jotform and Pressmaster APIs with key-based access.</li>
           </ul>
-          <div class="stack"><span>React</span><span>Supabase</span><span>MongoDB</span><span>Stripe</span><span>Jira</span></div>
+          <div class="stack"><span class="tech" data-name="React"><img src="icons/react.svg" alt="React" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Supabase"><img src="icons/supabase.svg" alt="Supabase" width="20" height="20" loading="lazy"></span><span class="tech" data-name="MongoDB"><img src="icons/mongodb.svg" alt="MongoDB" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Stripe"><img src="icons/stripe.svg" alt="Stripe" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Jira"><img src="icons/jira.svg" alt="Jira" width="20" height="20" loading="lazy"></span></div>
         </li>
 
         <li class="tl edu">
@@ -519,7 +584,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         </li>
 
         <li class="tl" data-uses="react php laravel mysql mongodb apis performance migration">
-          <div class="tl-meta"><span class="kind">work</span><span>Jul 2021 – Mar 2023</span><span>Bengaluru, Karnataka, India</span></div>
+          <div class="tl-meta"><span class="kind">work</span><span>Jul 2021 – Mar 2023</span><span>Bengaluru, Karnataka, India · remote</span></div>
           <div class="org-row"><img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAASFBMVEVHcEz///////8AQcL/////////////////////////jRAAOsEAP8P/iQBTetRtj9v/xYn/8ubo7vnU3PP/pkjCz++mu+lHcExVybFlAAAAGHRSTlMAnf//iqc+DtlJ/////////////////wDbmlWjAAABSElEQVR4nO3b64qDMBCG4RgPSVarbV33/i91K6XQnLZkSyfQvp/4KyF5mIAoMkrtMUNv9X2WsfUzzmddkNP34cvP4ehNsI0z6hbjbLjAywG74UYwXbyABEDrzuT2FwJcBS61gBBAu0sBovOXBFiTLoAYQA+qqQvoVfIE5ABWpRcQA2gAAAAAAAAAAAAAAP4JWLcoqyhgbqMssoBxCidIA8ICfDxgqg2gAlSAClCBD6xAlFkUcF6jeOPv/0oGAEB1wDpHkf0u2C5Pnsm7RmlAMN5OAAAAAAAAAAAAAAAAAAAAAAAAAAC8HSD6HVAKCFMG2JY9P/d3EUAfo5yKAI/yEBCnOiATAAAAAAAAAAAAAADqA9LtfmIAq/q6gEYNdQEu0/QqBbAm0/YrBXC5xmchwB+t1yKAzmSb3yUA1uu/b8oMTwNsP1y3/wUp7gJYw5lGTwAAAABJRU5ErkJggg==" alt="Simplilearn logo"><div><h3>Software Engineer</h3>
           <p class="where">Simplilearn Solutions Pvt. Ltd. · online learning platform</p></div></div>
           <ul>
@@ -528,7 +593,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <li>Migrated ~10M records from 20+ MySQL tables to MongoDB with cron batch scripts, reconciliation and failure alerts.</li>
             <li>Built a full-stack internal CMS that took marketing page updates from a few days to under an hour.</li>
           </ul>
-          <div class="stack"><span>React</span><span>PHP / Laravel</span><span>MySQL</span><span>MongoDB</span><span>Lighthouse</span></div>
+          <div class="stack"><span class="tech" data-name="React"><img src="icons/react.svg" alt="React" width="20" height="20" loading="lazy"></span><span class="tech" data-name="PHP"><img src="icons/php.svg" alt="PHP" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Laravel"><img src="icons/laravel.svg" alt="Laravel" width="20" height="20" loading="lazy"></span><span class="tech" data-name="MySQL"><img src="icons/mysql.svg" alt="MySQL" width="20" height="20" loading="lazy"></span><span class="tech" data-name="MongoDB"><img src="icons/mongodb.svg" alt="MongoDB" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Lighthouse"><img src="icons/lighthouse.svg" alt="Lighthouse" width="20" height="20" loading="lazy"></span></div>
         </li>
 
         <li class="tl" data-uses="python mysql sql dataquality">
@@ -539,7 +604,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
             <li>Worked on the Python backend of Web-DCRA, a disaster-loss prediction platform for India's National Disaster Management Authority (NDMA), using QGIS visualizations, data cleaning and analytical MySQL queries.</li>
             <li>Analyzed rainfall data for patterns that inform disaster preparedness, and built Decision Support System components that made decisions 40% faster.</li>
           </ul>
-          <div class="stack"><span>Python</span><span>MySQL</span><span>QGIS</span></div>
+          <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="MySQL"><img src="icons/mysql.svg" alt="MySQL" width="20" height="20" loading="lazy"></span><span class="tech" data-name="QGIS"><img src="icons/qgis.svg" alt="QGIS" width="20" height="20" loading="lazy"></span></div>
           <div class="links"><a href="https://www.rmsi.com/" target="_blank" rel="noopener">rmsi.com ↗</a></div>
         </li>
 
@@ -588,7 +653,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
               </ul>
             </div>
           </details>
-          <div class="stack"><span>Python</span><span>AWS CDK</span><span>Lambda</span><span>API Gateway</span><span>DynamoDB</span><span>S3</span><span>SQS</span><span>SNS</span><span>EventBridge</span><span>CloudWatch</span><span>CloudFront</span><span>Gemini / Groq</span><span>GitHub Actions</span></div>
+          <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="AWS CDK"><img src="icons/aws.svg" alt="AWS CDK" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Lambda"><img src="icons/lambda.svg" alt="Lambda" width="20" height="20" loading="lazy"></span><span class="tech" data-name="API Gateway"><img src="icons/apigateway.svg" alt="API Gateway" width="20" height="20" loading="lazy"></span><span class="tech" data-name="DynamoDB"><img src="icons/dynamodb.svg" alt="DynamoDB" width="20" height="20" loading="lazy"></span><span class="tech" data-name="S3"><img src="icons/s3.svg" alt="S3" width="20" height="20" loading="lazy"></span><span class="tech" data-name="SQS"><img src="icons/sqs.svg" alt="SQS" width="20" height="20" loading="lazy"></span><span class="tag">SNS</span><span class="tag">EventBridge</span><span class="tech" data-name="CloudWatch"><img src="icons/cloudwatch.svg" alt="CloudWatch" width="20" height="20" loading="lazy"></span><span class="tag">CloudFront</span><span class="tech" data-name="Gemini"><img src="icons/gemini.svg" alt="Gemini" width="20" height="20" loading="lazy"></span><span class="tag">Groq</span><span class="tech" data-name="GitHub Actions"><img src="icons/githubactions.svg" alt="GitHub Actions" width="20" height="20" loading="lazy"></span></div>
           <div class="links">
             <a href="https://dsocz579or6gq.cloudfront.net/" target="_blank" rel="noopener">live demo ↗</a>
             <a href="https://github.com/Shikha14DoD/AWS-DOC-QA" target="_blank" rel="noopener">code ↗</a>
@@ -623,7 +688,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
               </ul>
             </div>
           </details>
-          <div class="stack"><span>Python</span><span>FastAPI</span><span>React</span><span>TypeScript</span><span>Next.js</span><span>Neon Postgres</span><span>LangGraph</span><span>MCP</span><span>Groq / Gemini</span><span>GitHub Actions</span><span>Render</span></div>
+          <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="FastAPI"><img src="icons/fastapi.svg" alt="FastAPI" width="20" height="20" loading="lazy"></span><span class="tech" data-name="React"><img src="icons/react.svg" alt="React" width="20" height="20" loading="lazy"></span><span class="tech" data-name="TypeScript"><img src="icons/typescript.svg" alt="TypeScript" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Next.js"><img src="icons/nextjs.svg" alt="Next.js" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Neon Postgres"><img src="icons/postgresql.svg" alt="Neon Postgres" width="20" height="20" loading="lazy"></span><span class="tag">LangGraph</span><span class="tag">MCP</span><span class="tag">Groq</span><span class="tech" data-name="Gemini"><img src="icons/gemini.svg" alt="Gemini" width="20" height="20" loading="lazy"></span><span class="tech" data-name="GitHub Actions"><img src="icons/githubactions.svg" alt="GitHub Actions" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Render"><img src="icons/render.svg" alt="Render" width="20" height="20" loading="lazy"></span></div>
           <div class="links">
             <a href="https://fashion-mcp-frontend.onrender.com/" target="_blank" rel="noopener">live demo ↗</a>
             <a href="https://github.com/Shikha14DoD/fashion-mcp" target="_blank" rel="noopener">code ↗</a>
@@ -646,7 +711,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <ol class="flow" aria-label="Analysis steps">
             <li><span>clean in pandas</span></li><li><span>query in SQL</span></li><li><span>Power BI dashboard</span></li>
           </ol>
-          <div class="stack"><span>Python</span><span>SQL</span><span>Power BI</span><span>Jupyter</span></div>
+          <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tag">SQL</span><span class="tech" data-name="Power BI"><img src="icons/powerbi.svg" alt="Power BI" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Jupyter"><img src="icons/jupyter.svg" alt="Jupyter" width="20" height="20" loading="lazy"></span></div>
           <div class="links"><a href="https://github.com/Shikha14DoD/customer_behavior_analysis" target="_blank" rel="noopener">code ↗</a></div>
         </article>
       </div>
@@ -690,77 +755,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <p class="eyebrow">Skills</p>
       <h2 class="sec-title">Pick a skill, see where I used it</h2>
-      <p class="sec-lede">Click any skill. Every job, project and merge request on this page that used it lights up, and the rest fade back.</p>
+      <p class="sec-lede">Click any logo or skill. Every job, project and merge request on this page that used it lights up, and the rest fade back.</p>
 
       <div class="skill-groups">
-        <div class="sg">
-          <h3>Languages &amp; frameworks</h3>
-          <div class="chips">
-            <button class="chip" data-skill="python">Python</button>
-            <button class="chip" data-skill="sql">SQL</button>
-            <button class="chip" data-skill="typescript">TypeScript</button>
-            <button class="chip" data-skill="php">PHP</button>
-            <button class="chip" data-skill="ruby">Ruby</button>
-            <button class="chip" data-skill="react">React</button>
-            <button class="chip" data-skill="nextjs">Next.js</button>
-            <button class="chip" data-skill="fastapi">FastAPI</button>
-            <button class="chip" data-skill="rails">Rails</button>
-            <button class="chip" data-skill="laravel">Laravel</button>
-          </div>
-        </div>
-        <div class="sg">
-          <h3>Data &amp; backend</h3>
-          <div class="chips">
-            <button class="chip" data-skill="etl">ETL pipelines</button>
-            <button class="chip" data-skill="scraping">Web scraping</button>
-            <button class="chip" data-skill="apis">REST APIs</button>
-            <button class="chip" data-skill="dataquality">Data validation</button>
-            <button class="chip" data-skill="postgres">PostgreSQL</button>
-            <button class="chip" data-skill="mysql">MySQL</button>
-            <button class="chip" data-skill="mongodb">MongoDB</button>
-            <button class="chip" data-skill="bigquery">BigQuery</button>
-            <button class="chip" data-skill="migration">Data migration</button>
-            <button class="chip" data-skill="pandas">pandas</button>
-          </div>
-        </div>
-        <div class="sg">
-          <h3>AI &amp; ML</h3>
-          <div class="chips">
-            <button class="chip" data-skill="llm">LLM integration</button>
-            <button class="chip" data-skill="rag">RAG</button>
-            <button class="chip" data-skill="agents">Agents</button>
-            <button class="chip" data-skill="mcp">MCP</button>
-            <button class="chip" data-skill="embeddings">Embeddings</button>
-            <button class="chip" data-skill="pytorch">PyTorch</button>
-            <button class="chip" data-skill="huggingface">HuggingFace</button>
-            <button class="chip" data-skill="nlp">NLP</button>
-            <button class="chip" data-skill="topic">Topic modeling</button>
-            <button class="chip" data-skill="evals">LLM evaluation</button>
-          </div>
-        </div>
-        <div class="sg">
-          <h3>Cloud &amp; DevOps</h3>
-          <div class="chips">
-            <button class="chip" data-skill="aws">AWS</button>
-            <button class="chip" data-skill="docker">Docker</button>
-            <button class="chip" data-skill="cicd">CI/CD</button>
-          </div>
-        </div>
-        <div class="sg">
-          <h3>Testing &amp; delivery</h3>
-          <div class="chips">
-            <button class="chip" data-skill="testing">Automated testing</button>
-            <button class="chip" data-skill="rspec">RSpec</button>
-            <button class="chip" data-skill="performance">Web performance</button>
-            <button class="chip" data-skill="leadership">Team lead</button>
-          </div>
-        </div>
-        <div class="sg">
-          <h3>Also comfortable with</h3>
-          <div class="chips">
-            <span class="chip plain">Java</span><span class="chip plain">Spring Boot</span><span class="chip plain">Node.js</span><span class="chip plain">Express</span><span class="chip plain">Redis</span><span class="chip plain">Tailwind</span><span class="chip plain">Linux</span><span class="chip plain">Claude Code</span><span class="chip plain">Codex</span><span class="chip plain">GitLab Duo</span>
-          </div>
-        </div>
+        <div class="sg"><h3>Languages &amp; frameworks</h3><div class="tools"><button class="tool" data-skill="python" type="button"><img src="icons/python.svg" alt="" width="30" height="30"><span>Python</span></button><button class="tool" data-skill="typescript" type="button"><img src="icons/typescript.svg" alt="" width="30" height="30"><span>TypeScript</span></button><button class="tool" data-skill="sql" type="button"><i class="glyph">SQL</i><span>SQL</span></button><button class="tool" data-skill="php" type="button"><img src="icons/php.svg" alt="" width="30" height="30"><span>PHP</span></button><button class="tool" data-skill="ruby" type="button"><img src="icons/ruby.svg" alt="" width="30" height="30"><span>Ruby</span></button><button class="tool" data-skill="react" type="button"><img src="icons/react.svg" alt="" width="30" height="30"><span>React</span></button><button class="tool" data-skill="nextjs" type="button"><img src="icons/nextjs.svg" alt="" width="30" height="30"><span>Next.js</span></button><button class="tool" data-skill="fastapi" type="button"><img src="icons/fastapi.svg" alt="" width="30" height="30"><span>FastAPI</span></button><button class="tool" data-skill="rails" type="button"><img src="icons/rails.svg" alt="" width="30" height="30"><span>Rails</span></button><button class="tool" data-skill="laravel" type="button"><img src="icons/laravel.svg" alt="" width="30" height="30"><span>Laravel</span></button></div></div>
+        <div class="sg"><h3>Data &amp; cloud</h3><div class="tools"><button class="tool" data-skill="postgres" type="button"><img src="icons/postgresql.svg" alt="" width="30" height="30"><span>PostgreSQL</span></button><button class="tool" data-skill="mysql" type="button"><img src="icons/mysql.svg" alt="" width="30" height="30"><span>MySQL</span></button><button class="tool" data-skill="mongodb" type="button"><img src="icons/mongodb.svg" alt="" width="30" height="30"><span>MongoDB</span></button><button class="tool" data-skill="bigquery" type="button"><img src="icons/bigquery.svg" alt="" width="30" height="30"><span>BigQuery</span></button><button class="tool" data-skill="pandas" type="button"><img src="icons/pandas.svg" alt="" width="30" height="30"><span>pandas</span></button><button class="tool" data-skill="aws" type="button"><img src="icons/aws.svg" alt="" width="30" height="30"><span>AWS</span></button><button class="tool" data-skill="docker" type="button"><img src="icons/docker.svg" alt="" width="30" height="30"><span>Docker</span></button><button class="tool" data-skill="cicd" type="button"><img src="icons/githubactions.svg" alt="" width="30" height="30"><span>CI/CD</span></button></div></div>
+        <div class="sg"><h3>AI &amp; ML</h3><div class="tools"><button class="tool" data-skill="pytorch" type="button"><img src="icons/pytorch.svg" alt="" width="30" height="30"><span>PyTorch</span></button><button class="tool" data-skill="huggingface" type="button"><img src="icons/huggingface.svg" alt="" width="30" height="30"><span>Hugging Face</span></button><button class="tool" data-skill="llm" type="button"><img src="icons/gemini.svg" alt="" width="30" height="30"><span>LLM APIs</span></button></div></div>
+        <div class="sg sg-wide"><h3>What I do</h3><div class="chips"><button class="chip" type="button" data-skill="etl">ETL pipelines</button><button class="chip" type="button" data-skill="scraping">Web scraping</button><button class="chip" type="button" data-skill="apis">REST APIs</button><button class="chip" type="button" data-skill="dataquality">Data validation</button><button class="chip" type="button" data-skill="migration">Data migration</button><button class="chip" type="button" data-skill="rag">RAG</button><button class="chip" type="button" data-skill="agents">AI agents</button><button class="chip" type="button" data-skill="mcp">MCP</button><button class="chip" type="button" data-skill="embeddings">Embeddings</button><button class="chip" type="button" data-skill="nlp">NLP</button><button class="chip" type="button" data-skill="topic">Topic modeling</button><button class="chip" type="button" data-skill="evals">LLM evaluation</button><button class="chip" type="button" data-skill="testing">Automated testing</button><button class="chip" type="button" data-skill="rspec">RSpec</button><button class="chip" type="button" data-skill="performance">Web performance</button><button class="chip" type="button" data-skill="leadership">Team lead</button></div></div>
+        <div class="sg sg-wide"><h3>Also comfortable with</h3><div class="tools small"><span class="tool plain"><img src="icons/java.svg" alt="" width="30" height="30"><span>Java</span></span><span class="tool plain"><img src="icons/spring.svg" alt="" width="30" height="30"><span>Spring Boot</span></span><span class="tool plain"><img src="icons/nodejs.svg" alt="" width="30" height="30"><span>Node.js</span></span><span class="tool plain"><img src="icons/express.svg" alt="" width="30" height="30"><span>Express</span></span><span class="tool plain"><img src="icons/redis.svg" alt="" width="30" height="30"><span>Redis</span></span><span class="tool plain"><img src="icons/tailwind.svg" alt="" width="30" height="30"><span>Tailwind</span></span><span class="tool plain"><img src="icons/linux.svg" alt="" width="30" height="30"><span>Linux</span></span><span class="tool plain"><img src="icons/git.svg" alt="" width="30" height="30"><span>Git</span></span><span class="tool plain"><img src="icons/jira.svg" alt="" width="30" height="30"><span>Jira</span></span><span class="tool plain"><img src="icons/claude.svg" alt="" width="30" height="30"><span>Claude Code</span></span></div></div>
       </div>
       <p class="evidence" id="evidence" aria-live="polite">Nothing selected. Try <b>Python</b> or <b>MongoDB</b>.</p>
     </div>
@@ -897,7 +899,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   /* skills → evidence */
   const items = [...document.querySelectorAll('[data-uses]')];
   const evidence = document.getElementById('evidence');
-  const chips = [...document.querySelectorAll('.chip[data-skill]')];
+  const chips = [...document.querySelectorAll('[data-skill]')];
   const nameOf = el => {
     const h = el.querySelector('h3');
     const where = el.querySelector('.where');
@@ -1008,8 +1010,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     $('g-next').textContent = round < ROUNDS.length - 1 ? 'Next round' : 'See score';
     $('g-reveal').hidden = false;
   }
+  let finished = false;
   $('g-next').addEventListener('click', () => {
+    if (finished) { finished = false; round = 0; results.length = 0; [...$('g-dots').children].forEach(d => d.className = ''); showRound(); return; }
     if (round < ROUNDS.length - 1) { round++; showRound(); return; }
+    finished = true;
     const score = results.filter(Boolean).length;
     $('g-title').textContent = 'Done';
     $('g-kicker').textContent = 'Score';
@@ -1019,9 +1024,51 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     $('g-rt').textContent = '';
     $('g-rp').textContent = '';
     $('g-next').textContent = 'Play again';
-    $('g-next').onclick = () => { round = 0; results.length = 0; [...$('g-dots').children].forEach(d => d.className = ''); $('g-next').onclick = null; showRound(); };
   });
   showRound();
+
+
+  /* reading progress + active section in nav */
+  const bar = $('progress');
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')';
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const navLinks = [...document.querySelectorAll('.nav li a')];
+  if ('IntersectionObserver' in window) {
+    const spy = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      navLinks.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id)));
+    }), { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('main section[id]').forEach(sec => spy.observe(sec));
+  }
+
+  /* numbers count up when they scroll into view */
+  const counters = [...document.querySelectorAll('[data-count]')];
+  const fmt = (el, v) => (el.dataset.prefix || '') + Math.round(v).toLocaleString() + (el.dataset.suffix || '');
+  if (!reduce && 'IntersectionObserver' in window) {
+    const co = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      co.unobserve(e.target);
+      const el = e.target, end = +el.dataset.count, t0 = performance.now(), dur = 1100;
+      const step = t => { const p = Math.min(1, (t - t0) / dur); el.textContent = fmt(el, end * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { threshold: .6 });
+    counters.forEach(el => co.observe(el));
+  }
+
+  /* seamless logo marquee */
+  const mq = $('marquee');
+  if (mq && !reduce) [...mq.children].forEach(n => { const c = n.cloneNode(true); c.setAttribute('aria-hidden', 'true'); mq.appendChild(c); });
+
+  /* cards light up under the cursor */
+  if (matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.pcard, .mr, .imp, .rrow').forEach(card => {
+      card.addEventListener('pointermove', e => { const r = card.getBoundingClientRect(); card.style.setProperty('--mx', (e.clientX - r.left) + 'px'); card.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
+      card.addEventListener('pointerleave', () => card.style.setProperty('--my', '-200px'));
+    });
+  }
 
   /* copy email */
   $('copy').addEventListener('click', () => {
