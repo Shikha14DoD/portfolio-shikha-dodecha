@@ -29,6 +29,7 @@
   --bug: #C93A3A;
   --bug-soft: #F8DEDC;
   --ok: #1D7F45;
+  --live: #16A34A;
   --plate: #FFFFFF; /* logos are drawn for white; keep their tile white in both themes */
 
   --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -42,14 +43,14 @@
   :root:not([data-theme="light"]) {
     --paper: #0E1117; --surface: #161B24; --ink: #E5E9EF; --muted: #97A0B1; --line: #273041;
     --accent: #4CC6B3; --accent-soft: #123A35; --accent-ink: #062520;
-    --mark: #F2C04F; --mark-soft: #3D3214; --bug: #F07878; --bug-soft: #3E1D1F; --ok: #5BCB86;
+    --mark: #F2C04F; --mark-soft: #3D3214; --bug: #F07878; --bug-soft: #3E1D1F; --ok: #5BCB86; --live: #22C55E;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #0E1117; --surface: #161B24; --ink: #E5E9EF; --muted: #97A0B1; --line: #273041;
   --accent: #4CC6B3; --accent-soft: #123A35; --accent-ink: #062520;
-  --mark: #F2C04F; --mark-soft: #3D3214; --bug: #F07878; --bug-soft: #3E1D1F; --ok: #5BCB86;
+  --mark: #F2C04F; --mark-soft: #3D3214; --bug: #F07878; --bug-soft: #3E1D1F; --ok: #5BCB86; --live: #22C55E;
   color-scheme: dark;
 }
 
@@ -116,7 +117,7 @@ section { padding-block: var(--s-8) 0; scroll-margin-top: 4rem; }
   font: 500 .8rem var(--f-mono); color: var(--muted);
   border: 1px solid var(--line); background: var(--surface); padding: .35rem .7rem; border-radius: 999px;
 }
-.status i { width: .55rem; height: .55rem; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); animation: ping 2.4s infinite; }
+.status i { width: .55rem; height: .55rem; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 0 var(--live); animation: ping 2.4s infinite; }
 @keyframes ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); } 80%,100% { box-shadow: 0 0 0 8px transparent; } }
 .id-row { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
 .portrait {
@@ -443,7 +444,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 /* ---------- research rows: context + details ---------- */
 .rlist-k { display: flex; align-items: center; gap: .55rem; font: 600 .95rem var(--f-body); margin-bottom: var(--s-3); }
-.live { width: .55rem; height: .55rem; border-radius: 50%; background: var(--ok); animation: ping 2.4s infinite; }
+.live { width: .55rem; height: .55rem; border-radius: 50%; background: var(--live); animation: ping 2.4s infinite; }
 .wip { display: inline-block; vertical-align: middle; margin-left: .4rem; font: 500 .68rem var(--f-mono); letter-spacing: .03em; padding: .12rem .45rem; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
 .rdet { margin-top: .5rem; }
 .rdet summary { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; list-style: none; font: 600 .85rem var(--f-body); color: var(--accent); }
@@ -454,6 +455,21 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .rdet p { max-width: 70ch; font-size: .92rem; color: var(--muted); border-left: 2px solid var(--accent); padding-left: .8rem; animation: rdet-in .25s ease-out; }
 @keyframes rdet-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .live, .rdet p { animation: none; } .layers-body .layer:hover { transform: none; } }
+
+/* ---------- live status + project details ---------- */
+.is-live { display: inline-flex; align-items: center; gap: .45rem; font: 500 .76rem var(--f-mono); color: var(--live); white-space: nowrap; }
+.ldot { position: relative; display: inline-block; flex: none; width: .55rem; height: .55rem; border-radius: 50%; background: var(--live); box-shadow: 0 0 8px color-mix(in srgb, var(--live) 70%, transparent); }
+.ldot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--live); animation: live-ping 1.8s cubic-bezier(0, 0, .2, 1) infinite; }
+@keyframes live-ping { 75%, 100% { transform: scale(2.6); opacity: 0; } }
+.links a.demo { display: inline-flex; align-items: center; gap: .45rem; }
+.pdet summary { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; list-style: none; font: 600 .88rem var(--f-body); color: var(--accent); }
+.pdet summary::-webkit-details-marker { display: none; }
+.pdet summary::after { content: "+"; font: 500 1rem/1 var(--f-mono); }
+.pdet[open] summary::after { content: "\2212"; }
+.pdet-body { padding: .9rem 0 0; animation: rdet-in .25s ease-out; }
+.pdet-body .why { margin-bottom: .2rem; }
+.projects { align-items: start; }
+@media (prefers-reduced-motion: reduce) { .ldot::after, .pdet-body { animation: none; } }
 </style>
 </head>
 <body>
@@ -655,20 +671,18 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
       <div class="projects">
         <article class="pcard" id="p-rag" data-uses="python aws rag embeddings llm cicd testing evals serverless eventdriven">
-          <div class="ptop"><h3>AWS Document Q&amp;A</h3><span class="year">live since Sep 2026</span></div>
-          <div class="why">
+          <div class="ptop"><h3>AWS Document Q&amp;A</h3><span class="is-live"><span class="ldot" aria-hidden="true"></span>live since Sep 2026</span></div>
+          <p class="q">Ask a question about AWS and get an answer from the official docs, with citations, or an honest "I don't know."</p>
+          <div class="metrics"><span>0 made-up answers in a 19-question live eval</span><span>LLM judge matched my hand grades 14/14</span><span>large PDF: failing → 76 s</span><span>50 unit tests on every PR</span></div>
+          <details class="pdet"><summary>See details</summary><div class="more-body pdet-body"><div class="why">
             <p class="why-k">Why I built it</p>
             <p>While studying for my cloud computing midterm, simple questions like "what's the max Lambda timeout?" sent me digging through blogs, forum posts and outdated docs to work out which answer was current. Nobody assigned this. I wanted one place that answers from the official AWS documentation and shows the exact passage, so I can trust the answer without opening five other tabs.</p>
           </div>
-          <p>Ask a question about AWS and get an answer from the official documentation, with citations to the exact passages used. If the documents don't contain the answer, it says "I don't know." instead of making one up. You can upload your own AWS document (PDF or text) and it's searchable within about a minute. It runs entirely on free tiers.</p>
-          <ol class="flow" aria-label="How a document and a question move through the system">
+<p>Every answer cites the exact passages it came from. You can also upload your own AWS document (PDF or text), and it's searchable within about a minute. Everything runs on free tiers.</p>
+<ol class="flow" aria-label="How a document and a question move through the system">
             <li><span>S3 upload</span></li><li><span>Lambda: chunk + embed</span></li><li><span>DynamoDB vectors</span></li><li><span>API Gateway query</span></li><li><span>in-memory cosine search</span></li><li><span>Gemini, Groq fallback</span></li><li><span>cited answer or "I don't know."</span></li>
           </ol>
-          <div class="metrics"><span>0 made-up answers in a 19-question live eval</span><span>LLM judge matched my hand grades 14/14</span><span>large PDF: failing → 76 s</span><span>50 unit tests on every PR</span></div>
-          <details class="more">
-            <summary>Under the hood, and what broke</summary>
-            <div class="more-body">
-              <p><b>Why no vector database:</b> at this scale, searching in memory inside Lambda costs nothing when idle. An always-on vector database would break the free tier.</p>
+<p class="more-k">Under the hood</p><p><b>Why no vector database:</b> at this scale, searching in memory inside Lambda costs nothing when idle. An always-on vector database would break the free tier.</p>
               <p><b>Reliability:</b> retries fire only on temporary errors and follow the server's "retry after" hint. Documents that fail to ingest go to an SQS dead-letter queue, and CloudWatch alarms email me through SNS. Deleting a document removes it from search, and a daily EventBridge job catches anything missed.</p>
               <p><b>Delivery:</b> infrastructure as code with AWS CDK. GitHub Actions runs the tests on every pull request and deploys on merge using OIDC, with no stored AWS keys. Main is protected and only accepts tested PRs.</p>
               <p><b>Eval, reported straight:</b> every question that got an answer was correct. 6 of 19 requests failed on Groq's free-tier rate limit, and I report that rather than re-running for a better number. A simple keyword check only matched my hand grades 13/14.</p>
@@ -679,32 +693,27 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
                 <li>Deleting a document didn't remove it from search. Fixed with delete events plus a daily reconcile job.</li>
                 <li>My own eval used up the demo's daily Gemini quota, so I moved the judge to a separate provider.</li>
                 <li>Outside changes broke it too: Google retired two models, Groq's CDN blocked Python's default user-agent, and GitHub changed its login-token format.</li>
-              </ul>
-            </div>
-          </details>
+              </ul></div></details>
           <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="AWS CDK"><img src="icons/aws.svg" alt="AWS CDK" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Lambda"><img src="icons/lambda.svg" alt="Lambda" width="20" height="20" loading="lazy"></span><span class="tech" data-name="API Gateway"><img src="icons/apigateway.svg" alt="API Gateway" width="20" height="20" loading="lazy"></span><span class="tech" data-name="DynamoDB"><img src="icons/dynamodb.svg" alt="DynamoDB" width="20" height="20" loading="lazy"></span><span class="tech" data-name="S3"><img src="icons/s3.svg" alt="S3" width="20" height="20" loading="lazy"></span><span class="tech" data-name="SQS"><img src="icons/sqs.svg" alt="SQS" width="20" height="20" loading="lazy"></span><span class="tag">SNS</span><span class="tag">EventBridge</span><span class="tech" data-name="CloudWatch"><img src="icons/cloudwatch.svg" alt="CloudWatch" width="20" height="20" loading="lazy"></span><span class="tag">CloudFront</span><span class="tech" data-name="Gemini"><img src="icons/gemini.svg" alt="Gemini" width="20" height="20" loading="lazy"></span><span class="tag">Groq</span><span class="tech" data-name="GitHub Actions"><img src="icons/githubactions.svg" alt="GitHub Actions" width="20" height="20" loading="lazy"></span></div>
           <div class="links">
-            <a href="https://dsocz579or6gq.cloudfront.net/" target="_blank" rel="noopener">live demo ↗</a>
+            <a href="https://dsocz579or6gq.cloudfront.net/" target="_blank" rel="noopener" class="demo"><span class="ldot" aria-hidden="true"></span>live demo ↗</a>
             <a href="https://github.com/Shikha14DoD/AWS-DOC-QA" target="_blank" rel="noopener">code ↗</a>
           </div>
         </article>
 
         <article class="pcard" id="p-shop" data-uses="python fastapi react typescript nextjs postgres llm agents mcp testing cicd evals guardrails">
-          <div class="ptop"><h3>AI Shopping Assistant</h3><span class="year">2026 · live</span></div>
+          <div class="ptop"><h3>AI Shopping Assistant</h3><span class="is-live"><span class="ldot" aria-hidden="true"></span>live · 2026</span></div>
           <p class="q">A chat-based styling agent that searches 44,417 real garments and never saves anything without asking you first.</p>
-          <div class="why">
+          <div class="metrics"><span>44,417 garments</span><span>4 MCP tools</span><span>20 ground-truth tests</span><span>2 LLM providers</span><span>$0 hosting</span></div>
+          <details class="pdet"><summary>See details</summary><div class="more-body pdet-body"><div class="why">
             <p class="why-k">The vision</p>
             <p>Shopping for an occasion means scrolling through thousands of options. I want an agent that understands the event and puts together the whole look, including the outfit, jewelry and accessories, from real online stores. What's live today is an early, small-scale first version that I plan to grow much larger.</p>
           </div>
-          <p>Describe what you want, like "black t-shirts under $30" or "save that one in medium", and a LangGraph agent decides which tools to call on my own MCP server. The interesting part is what happens around the AI: the agent can only use the tools it's given, always knows which user it's acting for, pauses for your yes or no before any write, and logs every attempt, including failed and crashed ones.</p>
-          <ol class="flow" aria-label="Request flow">
+<p>Describe what you want, like "black t-shirts under $30" or "save that one in medium", and a LangGraph agent decides which tools to call on my own MCP server. The interesting part is what happens around the AI: the agent can only use the tools it's given, always knows which user it's acting for, pauses for your yes or no before any write, and logs every attempt, including failed and crashed ones.</p>
+<ol class="flow" aria-label="Request flow">
             <li><span>Next.js chat</span></li><li><span>FastAPI</span></li><li><span>LangGraph: agent → confirm → tools</span></li><li><span>MCP tool server</span></li><li><span>Neon Postgres</span></li>
           </ol>
-          <div class="metrics"><span>44,417 garments</span><span>4 MCP tools</span><span>20 ground-truth tests</span><span>2 LLM providers</span><span>$0 hosting</span></div>
-          <details class="more">
-            <summary>Under the hood, and what broke</summary>
-            <div class="more-body">
-              <p><b>Tools:</b> search the catalog, check stock by size, get care instructions, and save to a wishlist.</p>
+<p class="more-k">Under the hood</p><p><b>Tools:</b> search the catalog, check stock by size, get care instructions, and save to a wishlist.</p>
               <p><b>Safe writes:</b> saving needs API-key auth, passes a rate limit of 5 per minute, and is audit-logged on every attempt, guaranteed by a <code class="mono">finally</code> block.</p>
               <p><b>Two providers:</b> Groq is primary and Gemini is the automatic fallback, so one provider going down doesn't break the app.</p>
               <p><b>Restart-safe:</b> conversation state lives in Postgres through LangGraph checkpoints, so a server restart doesn't lose your chat, even one waiting on a "confirm?".</p>
@@ -714,12 +723,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
                 <li>A startup ordering bug meant the agent silently loaded 1 tool instead of 4. The test harness caught it.</li>
                 <li>The MCP subprocess didn't inherit <code class="mono">DATABASE_URL</code>, so every catalog query failed in production even though it worked locally.</li>
                 <li>Gemini could stall without erroring, which defeated the fallback until I added a timeout.</li>
-              </ul>
-            </div>
-          </details>
+              </ul></div></details>
           <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="FastAPI"><img src="icons/fastapi.svg" alt="FastAPI" width="20" height="20" loading="lazy"></span><span class="tech" data-name="React"><img src="icons/react.svg" alt="React" width="20" height="20" loading="lazy"></span><span class="tech" data-name="TypeScript"><img src="icons/typescript.svg" alt="TypeScript" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Next.js"><img src="icons/nextjs.svg" alt="Next.js" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Neon Postgres"><img src="icons/postgresql.svg" alt="Neon Postgres" width="20" height="20" loading="lazy"></span><span class="tag">LangGraph</span><span class="tag">MCP</span><span class="tag">Groq</span><span class="tech" data-name="Gemini"><img src="icons/gemini.svg" alt="Gemini" width="20" height="20" loading="lazy"></span><span class="tech" data-name="GitHub Actions"><img src="icons/githubactions.svg" alt="GitHub Actions" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Render"><img src="icons/render.svg" alt="Render" width="20" height="20" loading="lazy"></span></div>
           <div class="links">
-            <a href="https://fashion-mcp-frontend.onrender.com/" target="_blank" rel="noopener">live demo ↗</a>
+            <a href="https://fashion-mcp-frontend.onrender.com/" target="_blank" rel="noopener" class="demo"><span class="ldot" aria-hidden="true"></span>live demo ↗</a>
             <a href="https://github.com/Shikha14DoD/fashion-mcp" target="_blank" rel="noopener">code ↗</a>
           </div>
           <p class="note">Hosted on a free tier, so the first load after a quiet spell can take 20–30 seconds to wake up.</p>
@@ -727,19 +734,21 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
         <article class="pcard" id="p-ppp" data-uses="react mongodb stripe apis leadership supabase postman agile">
           <div class="ptop"><h3>Print Power Purpose</h3><span class="year">2025 · capstone</span></div>
-          <p>A custom-merchandise platform for an NJIT industry sponsor. Customers design products with an AI-guided flow, browse a vendor-API catalog and check out with Stripe. I led the 5-person team as technical lead.</p>
-          <ol class="flow" aria-label="User flow">
-            <li><span>AI design flow</span></li><li><span>vendor catalog API</span></li><li><span>Stripe checkout</span></li><li><span>order dashboard</span></li>
-          </ol>
+          <p class="q">A custom-merchandise platform for an NJIT industry sponsor, built in 4 sprints with a 5-person team I led.</p>
           <div class="metrics"><span>4 sprints</span><span>5-person team</span><span>3 sponsor APIs</span></div>
+          <details class="pdet"><summary>See details</summary><div class="more-body pdet-body"><p>A custom-merchandise platform for an NJIT industry sponsor. Customers design products with an AI-guided flow, browse a vendor-API catalog and check out with Stripe. I led the 5-person team as technical lead.</p>
+<ol class="flow" aria-label="User flow">
+            <li><span>AI design flow</span></li><li><span>vendor catalog API</span></li><li><span>Stripe checkout</span></li><li><span>order dashboard</span></li>
+          </ol></div></details>
         </article>
 
         <article class="pcard" id="p-cust" data-uses="python sql pandas">
           <div class="ptop"><h3>Customer Behavior Analysis</h3><span class="year">2026</span></div>
-          <p>An analytics project on customer shopping trends: SQL for the questions, Python for cleaning and exploration, and a Power BI dashboard for the answers.</p>
-          <ol class="flow" aria-label="Analysis steps">
+          <p class="q">Customer shopping trends, explored with SQL and Python and presented in a Power BI dashboard.</p>
+          <details class="pdet"><summary>See details</summary><div class="more-body pdet-body"><p>An analytics project on customer shopping trends: SQL for the questions, Python for cleaning and exploration, and a Power BI dashboard for the answers.</p>
+<ol class="flow" aria-label="Analysis steps">
             <li><span>clean in pandas</span></li><li><span>query in SQL</span></li><li><span>Power BI dashboard</span></li>
-          </ol>
+          </ol></div></details>
           <div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tag">SQL</span><span class="tech" data-name="Power BI"><img src="icons/powerbi.svg" alt="Power BI" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Jupyter"><img src="icons/jupyter.svg" alt="Jupyter" width="20" height="20" loading="lazy"></span></div>
           <div class="links"><a href="https://github.com/Shikha14DoD/customer_behavior_analysis" target="_blank" rel="noopener">code ↗</a></div>
         </article>
@@ -767,7 +776,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         </article>
 
         <article class="mr" id="mr-portal" data-uses="ruby rails postgres sql rspec docker cicd testing">
-          <div class="mr-head"><img class="logo sm" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAKlBMVEVHcEzkSCjpUSj2YifqTyjrUyjiQyn5kSbjRCn3cyb2hSf8bSbiQyn8oybjjDsYAAAAC3RSTlMAPBr1kWbf97i0fY/kiEQAAAQtSURBVHic7VtZsqMwDMQYEsDk/tcdCDh4kbV4gapX038zZUstdctseV33HxD6cRjG/rl4/bRumKoxEMd7rQdqETjDvbjr1blhVXXyi+NNdsNUh4A0nrIKrK8qLuiveLwWDOsPYw0C4xVvYG14XRuqaDBd8Vg2VKuDGgTceBwNBukGAl5BjJb2L+EGCpMbj2HrcRVuIOAXxLC1v758DvyCaBv2/nrm4CAYgoBUS8P1xXMQxiMqChRbi+dAhfEIV43h+tI5mKKAuKvi9WVzEHcUryi0YLEGkQIrbsNYgcI5iDyNawA0bC2bAygeIirUsCINpAFjCxZqACmA2RBcXjIHoKRpUSELFmkAK5C2IaxAgQawAkkNUnzz5yAZEO5pii99BUsAOtawniaX52qQrgjsaVoB/jOVhz7lqRXWAFmeNwdIRZAN4WP4RJYGiALQ2YItz9MAqwgoCV2eMwfpGQBLwgQDCZNAWxrbiliecWOGmTouCbUgRJgE0dLQhqnr0A/iBxRhRKoB8jmQRcQd+4USgo7oakBYsA0cG5IWbALHhox+tcA1WcTItsJ1uDyT/7orIEe2FexR8IgFd5w2fMiCO9STFtxx2NAYrZ/IrrUx31PQfHEzhyOp2U/D2VjcxkH/Us7bMXz9a8Md6d18uu+U8XFn+g2qG02Ihtl1lGx0LNCeApBq7mJSrSiAiXSCQAMGcB7dwf9fnUKiToxAVQbpLAiBegdTqnyKQC0GWH6cQB0Z8AypKajWBCo+RaCUARkePAl9lOQng8/dQq7JbwJV/oYluhpWZMDIv10NFWdZlgycuFp1PW2CPAassPN1T0hylaVn9fW4J+SY4Ivq5ZvdAhuYZAVN4Ec8Hg25y7kM2PnN8XDY8zewZOBH0+crCqYNmQwEwX4vaQR7KBkE3TwezIQu2FGpfOuAL3iHEc1AFGZ23xOKdqZkELXfGO9dLfs0OlFc/nkGOa8qixkIA0QfAGQ2iGQQtt8zQCYDUzl/EQPpTjC/3AdWBmn5sf4WozSUzsmvsd9wiIuRt1/jX+DEMryF68nvb7LrwvvzkTFYqPwyGbb8G/jrifZbsOfxc4K7fuZ+gOVNw/vzA0sGzP05Mjj5WQyY7bcgp+ETgFov/vqMT8M7zE81IeOnoZgMQH6UgbD9FkkZoPSYDGz3h4CnASwfaYLE/SEgGZD8IIPM9ltEMmDpIRmKfxfsTYNGy4eaUOEPBFwZGPk9BoXtt/jJwEnvyjDU+judYxpY5TtNKHF/iF0GQf4vg0rttxgk6XcUuz/EIkr/Ztz5SNFLPFC3/RYzN3/iuaMcI+8cqOj+EBwZGrXfgvRiA/eJGDTPj8vQuP2WQXIasu98pFjge8Ib2m+hoLviu8o/EMlwY/kHlofz+zLc3P4T1zTc5v4QxzTc6f4Qapnn5any/wr+Aak+pAnO1YnVAAAAAElFTkSuQmCC" alt="GitLab logo"><span class="merged">merged</span><span>!2013</span><span class="repo">contributors-gitlab-com</span></div>
+          <div class="mr-head"><img class="logo sm" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAKlBMVEVHcEzkSCjpUSj2YifqTyjrUyjiQyn5kSbjRCn3cyb2hSf8bSbiQyn8oybjjDsYAAAAC3RSTlMAPBr1kWbf97i0fY/kiEQAAAQtSURBVHic7VtZsqMwDMQYEsDk/tcdCDh4kbV4gapX038zZUstdctseV33HxD6cRjG/rl4/bRumKoxEMd7rQdqETjDvbjr1blhVXXyi+NNdsNUh4A0nrIKrK8qLuiveLwWDOsPYw0C4xVvYG14XRuqaDBd8Vg2VKuDGgTceBwNBukGAl5BjJb2L+EGCpMbj2HrcRVuIOAXxLC1v758DvyCaBv2/nrm4CAYgoBUS8P1xXMQxiMqChRbi+dAhfEIV43h+tI5mKKAuKvi9WVzEHcUryi0YLEGkQIrbsNYgcI5iDyNawA0bC2bAygeIirUsCINpAFjCxZqACmA2RBcXjIHoKRpUSELFmkAK5C2IaxAgQawAkkNUnzz5yAZEO5pii99BUsAOtawniaX52qQrgjsaVoB/jOVhz7lqRXWAFmeNwdIRZAN4WP4RJYGiALQ2YItz9MAqwgoCV2eMwfpGQBLwgQDCZNAWxrbiliecWOGmTouCbUgRJgE0dLQhqnr0A/iBxRhRKoB8jmQRcQd+4USgo7oakBYsA0cG5IWbALHhox+tcA1WcTItsJ1uDyT/7orIEe2FexR8IgFd5w2fMiCO9STFtxx2NAYrZ/IrrUx31PQfHEzhyOp2U/D2VjcxkH/Us7bMXz9a8Md6d18uu+U8XFn+g2qG02Ihtl1lGx0LNCeApBq7mJSrSiAiXSCQAMGcB7dwf9fnUKiToxAVQbpLAiBegdTqnyKQC0GWH6cQB0Z8AypKajWBCo+RaCUARkePAl9lOQng8/dQq7JbwJV/oYluhpWZMDIv10NFWdZlgycuFp1PW2CPAassPN1T0hylaVn9fW4J+SY4Ivq5ZvdAhuYZAVN4Ec8Hg25y7kM2PnN8XDY8zewZOBH0+crCqYNmQwEwX4vaQR7KBkE3TwezIQu2FGpfOuAL3iHEc1AFGZ23xOKdqZkELXfGO9dLfs0OlFc/nkGOa8qixkIA0QfAGQ2iGQQtt8zQCYDUzl/EQPpTjC/3AdWBmn5sf4WozSUzsmvsd9wiIuRt1/jX+DEMryF68nvb7LrwvvzkTFYqPwyGbb8G/jrifZbsOfxc4K7fuZ+gOVNw/vzA0sGzP05Mjj5WQyY7bcgp+ETgFov/vqMT8M7zE81IeOnoZgMQH6UgbD9FkkZoPSYDGz3h4CnASwfaYLE/SEgGZD8IIPM9ltEMmDpIRmKfxfsTYNGy4eaUOEPBFwZGPk9BoXtt/jJwEnvyjDU+judYxpY5TtNKHF/iF0GQf4vg0rttxgk6XcUuz/EIkr/Ztz5SNFLPFC3/RYzN3/iuaMcI+8cqOj+EBwZGrXfgvRiA/eJGDTPj8vQuP2WQXIasu98pFjge8Ib2m+hoLviu8o/EMlwY/kHlofz+zLc3P4T1zTc5v4QxzTc6f4Qapnn5any/wr+Aak+pAnO1YnVAAAAAElFTkSuQmCC" alt="GitLab logo"><span class="merged">merged</span><span>!2013</span><span class="is-live"><span class="ldot" aria-hidden="true"></span>live</span><span class="repo">contributors-gitlab-com</span></div>
           <div class="mr-body">
             <h3>Fixed username search returning nothing</h3>
             <p>An inner join dropped every activity that had no linked user, so some searches came back empty. A LEFT JOIN keeps those rows. I added 3 RSpec tests and ran them in Docker.</p>
