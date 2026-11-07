@@ -367,16 +367,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 }
 .stack .tech:hover::after { opacity: 1; transform: translate(-50%, 0); }
 
-.marquee {
-  margin-top: var(--s-7); overflow: hidden; border-block: 1px solid var(--line); padding-block: .9rem;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-.marquee-track { display: flex; gap: var(--s-6); width: max-content; animation: marquee 55s linear infinite; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
-.mq { display: inline-flex; align-items: center; gap: .5rem; font: 500 .9rem var(--f-body); color: var(--muted); white-space: nowrap; }
-.mq img { width: 1.4rem; height: 1.4rem; object-fit: contain; background: var(--plate); border-radius: 6px; padding: .15rem; box-sizing: content-box; }
-@keyframes marquee { to { transform: translateX(-50%); } }
 
 .impact { display: grid; gap: var(--s-4); grid-template-columns: 1fr; margin-bottom: var(--s-5); }
 @media (min-width: 760px) { .impact { grid-template-columns: repeat(3, 1fr); } }
@@ -423,9 +413,47 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .pcard:hover, .imp:hover, .rrow:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+  .pulse { display: none; }
   .tool, .stack .tech { transition: none; }
 }
+
+/* ---------- stack layers ---------- */
+.layers { margin-top: var(--s-7); }
+.layers-k { font: 500 .75rem var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: var(--s-3); }
+.layers-body { position: relative; display: grid; gap: .5rem; padding-left: 1.6rem; }
+.layers-body::before { content: ""; position: absolute; left: .45rem; top: 1.1rem; bottom: 1.1rem; width: 2px; background: linear-gradient(var(--accent), var(--mark)); opacity: .5; border-radius: 2px; }
+.pulse { position: absolute; left: calc(.45rem - 4px); top: 1.1rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent); animation: pulse-down 5s cubic-bezier(.6,0,.4,1) infinite; }
+@keyframes pulse-down { 0% { top: 1.1rem; opacity: 0; } 8% { opacity: 1; } 85% { opacity: 1; } 100% { top: calc(100% - 1.1rem - 10px); opacity: 0; } }
+.layer {
+  position: relative; display: grid; grid-template-columns: 1fr; gap: .5rem var(--s-5); align-items: center;
+  padding: .7rem 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  transition: transform .2s, border-color .2s, opacity .2s;
+}
+@media (min-width: 760px) { .layer { grid-template-columns: 13rem 1fr; } }
+@media (min-width: 1040px) { .layer { grid-template-columns: 13rem auto 1fr; } }
+.layer-use { font: 400 .76rem var(--f-mono); color: var(--muted); }
+@media (min-width: 1040px) { .layer-use { text-align: right; } }
+.layer > * { min-width: 0; }
+.layer::before { content: ""; position: absolute; left: calc(-1.6rem + .45rem - 3px); top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: var(--paper); border: 2px solid var(--accent); }
+.layer-k { display: grid; }
+.layer-k b { font: 700 1rem var(--f-display); }
+.layer-k span { font: 400 .75rem var(--f-mono); color: var(--muted); }
+.layers-body:hover .layer { opacity: .5; }
+.layers-body .layer:hover { opacity: 1; transform: translateX(6px); border-color: var(--accent); }
+
+/* ---------- research rows: context + details ---------- */
+.rlist-k { display: flex; align-items: center; gap: .55rem; font: 600 .95rem var(--f-body); margin-bottom: var(--s-3); }
+.live { width: .55rem; height: .55rem; border-radius: 50%; background: var(--ok); animation: ping 2.4s infinite; }
+.wip { display: inline-block; vertical-align: middle; margin-left: .4rem; font: 500 .68rem var(--f-mono); letter-spacing: .03em; padding: .12rem .45rem; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
+.rdet { margin-top: .5rem; }
+.rdet summary { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; list-style: none; font: 600 .85rem var(--f-body); color: var(--accent); }
+.rdet summary::-webkit-details-marker { display: none; }
+.rdet summary::after { content: "+"; font: 500 .95rem/1 var(--f-mono); }
+.rdet[open] summary::after { content: "−"; }
+.rdet[open] summary { margin-bottom: .4rem; }
+.rdet p { max-width: 70ch; font-size: .92rem; color: var(--muted); border-left: 2px solid var(--accent); padding-left: .8rem; animation: rdet-in .25s ease-out; }
+@keyframes rdet-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .live, .rdet p { animation: none; } .layers-body .layer:hover { transform: none; } }
 </style>
 </head>
 <body>
@@ -482,7 +510,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         </div>
       </div>
     </div>
-    <div class="wrap"><div class="marquee" aria-label="Tools I build with"><div class="marquee-track" id="marquee"><span class="mq"><img src="icons/python.svg" alt="" width="22" height="22">Python</span><span class="mq"><img src="icons/typescript.svg" alt="" width="22" height="22">TypeScript</span><span class="mq"><img src="icons/react.svg" alt="" width="22" height="22">React</span><span class="mq"><img src="icons/nextjs.svg" alt="" width="22" height="22">Next.js</span><span class="mq"><img src="icons/fastapi.svg" alt="" width="22" height="22">FastAPI</span><span class="mq"><img src="icons/nodejs.svg" alt="" width="22" height="22">Node.js</span><span class="mq"><img src="icons/postgresql.svg" alt="" width="22" height="22">PostgreSQL</span><span class="mq"><img src="icons/mongodb.svg" alt="" width="22" height="22">MongoDB</span><span class="mq"><img src="icons/mysql.svg" alt="" width="22" height="22">MySQL</span><span class="mq"><img src="icons/aws.svg" alt="" width="22" height="22">AWS</span><span class="mq"><img src="icons/lambda.svg" alt="" width="22" height="22">AWS Lambda</span><span class="mq"><img src="icons/dynamodb.svg" alt="" width="22" height="22">DynamoDB</span><span class="mq"><img src="icons/docker.svg" alt="" width="22" height="22">Docker</span><span class="mq"><img src="icons/githubactions.svg" alt="" width="22" height="22">GitHub Actions</span><span class="mq"><img src="icons/gitlab.svg" alt="" width="22" height="22">GitLab</span><span class="mq"><img src="icons/pytorch.svg" alt="" width="22" height="22">PyTorch</span><span class="mq"><img src="icons/huggingface.svg" alt="" width="22" height="22">Hugging Face</span><span class="mq"><img src="icons/gemini.svg" alt="" width="22" height="22">Gemini</span><span class="mq"><img src="icons/claude.svg" alt="" width="22" height="22">Claude</span><span class="mq"><img src="icons/rails.svg" alt="" width="22" height="22">Rails</span><span class="mq"><img src="icons/laravel.svg" alt="" width="22" height="22">Laravel</span><span class="mq"><img src="icons/php.svg" alt="" width="22" height="22">PHP</span><span class="mq"><img src="icons/java.svg" alt="" width="22" height="22">Java</span><span class="mq"><img src="icons/redis.svg" alt="" width="22" height="22">Redis</span><span class="mq"><img src="icons/git.svg" alt="" width="22" height="22">Git</span></div></div></div>
+    <div class="wrap"><div class="layers" aria-label="The layers of the stack I build across"><p class="layers-k">I build across every layer</p><div class="layers-body"><span class="pulse" aria-hidden="true"></span><div class="layer" style="--i:0"><div class="layer-k"><b>Frontend</b><span>what people see</span></div><div class="stack layer-logos"><span class="tech" data-name="React"><img src="icons/react.svg" alt="React" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Next.js"><img src="icons/nextjs.svg" alt="Next.js" width="20" height="20" loading="lazy"></span><span class="tech" data-name="TypeScript"><img src="icons/typescript.svg" alt="TypeScript" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Tailwind"><img src="icons/tailwind.svg" alt="Tailwind" width="20" height="20" loading="lazy"></span></div><p class="layer-use">AI Shopping Assistant · Print Power Purpose · Simplilearn CMS</p></div><div class="layer" style="--i:1"><div class="layer-k"><b>Backend &amp; APIs</b><span>where requests land</span></div><div class="stack layer-logos"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="FastAPI"><img src="icons/fastapi.svg" alt="FastAPI" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Node.js"><img src="icons/nodejs.svg" alt="Node.js" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Rails"><img src="icons/rails.svg" alt="Rails" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Laravel"><img src="icons/laravel.svg" alt="Laravel" width="20" height="20" loading="lazy"></span><span class="tech" data-name="PHP"><img src="icons/php.svg" alt="PHP" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Java"><img src="icons/java.svg" alt="Java" width="20" height="20" loading="lazy"></span></div><p class="layer-use">FastAPI agent backend · Rails at GitLab · Laravel at Simplilearn</p></div><div class="layer" style="--i:2"><div class="layer-k"><b>AI &amp; ML</b><span>agents, RAG, embeddings</span></div><div class="stack layer-logos"><span class="tech" data-name="PyTorch"><img src="icons/pytorch.svg" alt="PyTorch" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Hugging Face"><img src="icons/huggingface.svg" alt="Hugging Face" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Gemini"><img src="icons/gemini.svg" alt="Gemini" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Claude"><img src="icons/claude.svg" alt="Claude" width="20" height="20" loading="lazy"></span></div><p class="layer-use">RAG on AWS · LangGraph agent · embedding models at the lab</p></div><div class="layer" style="--i:3"><div class="layer-k"><b>Data</b><span>where truth lives</span></div><div class="stack layer-logos"><span class="tech" data-name="PostgreSQL"><img src="icons/postgresql.svg" alt="PostgreSQL" width="20" height="20" loading="lazy"></span><span class="tech" data-name="MySQL"><img src="icons/mysql.svg" alt="MySQL" width="20" height="20" loading="lazy"></span><span class="tech" data-name="MongoDB"><img src="icons/mongodb.svg" alt="MongoDB" width="20" height="20" loading="lazy"></span><span class="tech" data-name="DynamoDB"><img src="icons/dynamodb.svg" alt="DynamoDB" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Redis"><img src="icons/redis.svg" alt="Redis" width="20" height="20" loading="lazy"></span><span class="tech" data-name="BigQuery"><img src="icons/bigquery.svg" alt="BigQuery" width="20" height="20" loading="lazy"></span><span class="tech" data-name="pandas"><img src="icons/pandas.svg" alt="pandas" width="20" height="20" loading="lazy"></span></div><p class="layer-use">36M+ record ETL · 10M-row MySQL → MongoDB migration</p></div><div class="layer" style="--i:4"><div class="layer-k"><b>Cloud &amp; delivery</b><span>how it ships</span></div><div class="stack layer-logos"><span class="tech" data-name="AWS"><img src="icons/aws.svg" alt="AWS" width="20" height="20" loading="lazy"></span><span class="tech" data-name="AWS Lambda"><img src="icons/lambda.svg" alt="AWS Lambda" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Amazon S3"><img src="icons/s3.svg" alt="Amazon S3" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Docker"><img src="icons/docker.svg" alt="Docker" width="20" height="20" loading="lazy"></span><span class="tech" data-name="GitHub Actions"><img src="icons/githubactions.svg" alt="GitHub Actions" width="20" height="20" loading="lazy"></span><span class="tech" data-name="GitLab CI"><img src="icons/gitlab.svg" alt="GitLab CI" width="20" height="20" loading="lazy"></span></div><p class="layer-use">serverless AWS · OIDC deploys · GitLab CI</p></div></div></div></div>
   </header>
 
   <!-- ABOUT -->
@@ -534,13 +562,14 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <div class="imp hot"><b data-count="5" data-suffix="%">5%</b><span>of the data was all one API returned. I caught it and fixed it; the gap had reversed a key finding.</span></div>
       </div>
 
+      <p class="rlist-k"><span class="live"></span>What I'm working on right now at the lab</p>
       <div class="rlist">
         <article class="rrow" id="r-speech" data-uses="python scraping etl apis pandas nlp topic dataquality">
-          <div class="rrow-main"><h3>Speech Gender Gap</h3><p>Across countries, do female and male leaders prioritize different issues when they speak in public?</p></div>
+          <div class="rrow-main"><h3>Speech Gender Gap <span class="wip">in progress</span></h3><p>Across countries, do female and male leaders prioritize different issues when they speak in public?</p><details class="rdet"><summary>See details</summary><p>Speeches by heads of state and government from 2023 to 2026, gathered from official sites, archives, PDFs and video and translated where needed. I build the scraping, cleaning and dedup pipeline, then run topic models per leader to compare women and men, at home and on the world stage.</p></details></div>
           <div class="rrow-side"><div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="pandas"><img src="icons/pandas.svg" alt="pandas" width="20" height="20" loading="lazy"></span><span class="tag">BeautifulSoup</span><span class="tag">NMF</span></div><a class="go" href="https://github.com/Shikha14DoD/speech-gender-gap" target="_blank" rel="noopener">code ↗</a></div>
         </article>
         <article class="rrow" id="r-bias" data-uses="python etl pytorch huggingface embeddings bigquery pandas nlp dataquality">
-          <div class="rrow-main"><h3>Gender Bias in American Language</h3><p>A century of US public text: has gender bias in language changed, and does it track real inequality?</p></div>
+          <div class="rrow-main"><h3>Gender Bias in American Language <span class="wip">in progress</span></h3><p>A century of US public text: has gender bias in language changed, and does it track real inequality?</p><details class="rdet"><summary>See details</summary><p>Measures gender bias in a century of US newspapers, news, Reddit and the Congressional Record using word embeddings (Word2Vec, GloVe, BERT, RoBERTa), state by state and year by year. I built the checkpointed pipeline behind it, and the scores are checked against Census and survey data.</p></details></div>
           <div class="rrow-side"><div class="stack"><span class="tech" data-name="Python"><img src="icons/python.svg" alt="Python" width="20" height="20" loading="lazy"></span><span class="tech" data-name="PyTorch"><img src="icons/pytorch.svg" alt="PyTorch" width="20" height="20" loading="lazy"></span><span class="tech" data-name="Hugging Face"><img src="icons/huggingface.svg" alt="Hugging Face" width="20" height="20" loading="lazy"></span><span class="tech" data-name="BigQuery"><img src="icons/bigquery.svg" alt="BigQuery" width="20" height="20" loading="lazy"></span></div><a class="go" href="https://github.com/Shikha14DoD/bias_project" target="_blank" rel="noopener">code ↗</a></div>
         </article>
       </div>
@@ -1058,9 +1087,6 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     counters.forEach(el => co.observe(el));
   }
 
-  /* seamless logo marquee */
-  const mq = $('marquee');
-  if (mq && !reduce) [...mq.children].forEach(n => { const c = n.cloneNode(true); c.setAttribute('aria-hidden', 'true'); mq.appendChild(c); });
 
   /* cards light up under the cursor */
   if (matchMedia('(hover: hover)').matches) {
