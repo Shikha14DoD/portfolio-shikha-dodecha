@@ -256,6 +256,17 @@ section { padding-block: var(--s-8) 0; scroll-margin-top: 4rem; }
 .metrics { display: flex; flex-wrap: wrap; gap: var(--s-2); }
 .metrics span { font: 500 .78rem var(--f-mono); padding: .25rem .55rem; border-radius: 4px; background: var(--accent-soft); color: var(--ink); }
 .note { font-size: .8rem; color: var(--muted); font-style: italic; }
+.more { border: 1px solid var(--line); border-radius: 8px; }
+.more summary { cursor: pointer; padding: .6rem .9rem; font: 600 .9rem var(--f-body); color: var(--accent); list-style: none; display: flex; align-items: center; gap: .5rem; }
+.more summary::-webkit-details-marker { display: none; }
+.more summary::before { content: "+"; font: 500 1rem/1 var(--f-mono); width: 1rem; text-align: center; }
+.more[open] summary::before { content: "−"; }
+.more[open] summary { border-bottom: 1px solid var(--line); }
+.more-body { padding: .8rem .9rem 1rem; display: grid; gap: .6rem; font-size: .93rem; color: var(--muted); }
+.more-body b { color: var(--ink); font-weight: 600; }
+.more-body ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .35rem; }
+.more-body li::marker { color: var(--accent); }
+.more-k { font: 500 .72rem var(--f-mono); text-transform: uppercase; letter-spacing: .07em; color: var(--ink); margin-top: .3rem; }
 .earlier { margin-top: var(--s-5); color: var(--muted); font-size: .95rem; }
 .earlier a { color: var(--accent); }
 
@@ -549,17 +560,34 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
       <div class="projects">
         <article class="pcard" id="p-rag" data-uses="python aws rag embeddings llm cicd testing evals">
-          <div class="ptop"><h3>Document Q&amp;A API</h3><span class="year">2026 · live</span></div>
+          <div class="ptop"><h3>AWS Document Q&amp;A</h3><span class="year">live since Sep 2026</span></div>
           <div class="why">
             <p class="why-k">Why I built it</p>
-            <p>While studying for my cloud computing midterm, I spent hours going through lecture slides, notes and Google results just to find one answer. So I built a tool to cut that search time. It gives the exact answer from reliable sources only, and if the answer isn't there, it says so instead of making one up.</p>
+            <p>While studying for my cloud computing midterm, simple questions like "what's the max Lambda timeout?" sent me digging through blogs, forum posts and outdated docs to work out which answer was current. Nobody assigned this. I wanted one place that answers from the official AWS documentation and shows the exact passage, so I can trust the answer without opening five other tabs.</p>
           </div>
-          <p>A serverless RAG API on AWS. Upload your own documents and ask questions about them. Answers come only from those documents, with citations, and the API declines when it can't find support. If the main LLM provider fails, it falls back to a second one automatically.</p>
-          <ol class="flow" aria-label="Request flow">
-            <li><span>S3 upload</span></li><li><span>SQS</span></li><li><span>Lambda: chunk + embed</span></li><li><span>DynamoDB</span></li><li><span>cosine search</span></li><li><span>Gemini → Groq fallback</span></li><li><span>cited answer</span></li>
+          <p>Ask a question about AWS and get an answer from the official documentation, with citations to the exact passages used. If the documents don't contain the answer, it says "I don't know." instead of making one up. You can upload your own AWS document (PDF or text) and it's searchable within about a minute. It runs entirely on free tiers.</p>
+          <ol class="flow" aria-label="How a document and a question move through the system">
+            <li><span>S3 upload</span></li><li><span>Lambda: chunk + embed</span></li><li><span>DynamoDB vectors</span></li><li><span>API Gateway query</span></li><li><span>in-memory cosine search</span></li><li><span>Gemini, Groq fallback</span></li><li><span>cited answer or "I don't know."</span></li>
           </ol>
-          <div class="metrics"><span>8/8 correct retrieval</span><span>7/8 correct answers</span><span>24 unit tests gate deploys</span><span>OIDC CI/CD</span></div>
-          <div class="stack"><span>AWS CDK</span><span>Lambda</span><span>API Gateway</span><span>DynamoDB</span><span>S3</span><span>SQS</span><span>CloudWatch</span><span>GitHub Actions</span></div>
+          <div class="metrics"><span>0 made-up answers in a 19-question live eval</span><span>LLM judge matched my hand grades 14/14</span><span>large PDF: failing → 76 s</span><span>50 unit tests on every PR</span></div>
+          <details class="more">
+            <summary>Under the hood, and what broke</summary>
+            <div class="more-body">
+              <p><b>Why no vector database:</b> at this scale, searching in memory inside Lambda costs nothing when idle. An always-on vector database would break the free tier.</p>
+              <p><b>Reliability:</b> retries fire only on temporary errors and follow the server's "retry after" hint. Documents that fail to ingest go to an SQS dead-letter queue, and CloudWatch alarms email me through SNS. Deleting a document removes it from search, and a daily EventBridge job catches anything missed.</p>
+              <p><b>Delivery:</b> infrastructure as code with AWS CDK. GitHub Actions runs the tests on every pull request and deploys on merge using OIDC, with no stored AWS keys. Main is protected and only accepts tested PRs.</p>
+              <p><b>Eval, reported straight:</b> every question that got an answer was correct. 6 of 19 requests failed on Groq's free-tier rate limit, and I report that rather than re-running for a better number. A simple keyword check only matched my hand grades 13/14.</p>
+              <p class="more-k">What broke and what I learned</p>
+              <ul>
+                <li>A 62-page PDF silently lost its last 12 pages to a page cap. The upload response now says exactly how many pages were indexed.</li>
+                <li>Batching embeddings cut API calls from 106 to 2 but made big PDFs fail every time, because the free tier counts texts, not calls. The alarm emailed me, I measured the failure, and pacing fixed it.</li>
+                <li>Deleting a document didn't remove it from search. Fixed with delete events plus a daily reconcile job.</li>
+                <li>My own eval used up the demo's daily Gemini quota, so I moved the judge to a separate provider.</li>
+                <li>Outside changes broke it too: Google retired two models, Groq's CDN blocked Python's default user-agent, and GitHub changed its login-token format.</li>
+              </ul>
+            </div>
+          </details>
+          <div class="stack"><span>Python</span><span>AWS CDK</span><span>Lambda</span><span>API Gateway</span><span>DynamoDB</span><span>S3</span><span>SQS</span><span>SNS</span><span>EventBridge</span><span>CloudWatch</span><span>CloudFront</span><span>Gemini / Groq</span><span>GitHub Actions</span></div>
           <div class="links">
             <a href="https://dsocz579or6gq.cloudfront.net/" target="_blank" rel="noopener">live demo ↗</a>
             <a href="https://github.com/Shikha14DoD/AWS-DOC-QA" target="_blank" rel="noopener">code ↗</a>
